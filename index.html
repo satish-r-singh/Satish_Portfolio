@@ -1,66 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ROHIT_SINGH_AI // LEAD DATA SCIENTIST</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Space Grotesk', 'Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            colors: {
-              'power': '#FF5F1F', // Safety Orange
-              'hyper': '#2563EB', // Hyper Blue
-              'slate-body': '#1E293B',
-              'terminal-green': '#22c55e',
-            },
-            boxShadow: {
-              'hard': '4px 4px 0px 0px #000000',
-              'hard-sm': '2px 2px 0px 0px #000000',
-            },
-            borderWidth: {
-              '3': '3px',
-            },
-            animation: {
-              'marquee': 'marquee 25s linear infinite',
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROHIT_SINGH_AI // LEAD DATA SCIENTIST</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            'power': '#FF5F1F', // Safety Orange
+            'hyper': '#2563EB', // Hyper Blue
+            'slate-body': '#1E293B',
+            'terminal-green': '#22c55e',
+          },
+          boxShadow: {
+            'hard': '4px 4px 0px 0px #000000',
+            'hard-sm': '2px 2px 0px 0px #000000',
+          },
+          borderWidth: {
+            '3': '3px',
+          },
+          keyframes: {
+            'blink-bw': {
+              '0%, 100%': { color: '#000000' },
+              '50%': { color: '#ffffff' },
             }
+          },
+          animation: {
+            'marquee': 'marquee 25s linear infinite',
+            'blink-bw': 'blink-bw 1s steps(2) infinite',
           }
         }
       }
-    </script>
-    <style>
-      /* Custom scrollbar for that industrial feel */
-      ::-webkit-scrollbar {
-        width: 12px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #ffffff;
-        border-left: 3px solid black;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #000000;
-        border: 2px solid #ffffff;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #FF5F1F;
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for that industrial feel */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #ffffff;
+      border-left: 3px solid black;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #000000;
+      border: 2px solid #ffffff;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF5F1F;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translate3d(0, 0, 0);
       }
 
-      @keyframes marquee {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+      100% {
+        transform: translate3d(-50%, 0, 0);
       }
-      .animate-marquee {
-        animation: marquee 25s linear infinite;
-      }
-    </style>
+    }
+
+    /* Hover Pause */
+    .group:hover .group-hover-paused {
+      animation-play-state: paused;
+    }
+  </style>
+
   <script type="importmap">
 {
   "imports": {
@@ -74,7 +95,10 @@
 }
 </script>
 </head>
-  <body class="bg-white text-black antialiased selection:bg-power selection:text-white">
-    <div id="root"></div>
-  </body>
+
+<body class="bg-white text-black antialiased selection:bg-power selection:text-white">
+  <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+
 </html>
