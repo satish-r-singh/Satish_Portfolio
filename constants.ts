@@ -1,4 +1,4 @@
-import { Project, Experience } from './types';
+import { Project, Experience, ArchiveProject } from './types';
 
 export const PROJECTS: Project[] = [
   {
@@ -25,6 +25,14 @@ export const PROJECTS: Project[] = [
     imageUrl: 'https://picsum.photos/800/450?random=3',
     link: '#',
   },
+];
+
+export const ARCHIVE_PROJECTS: ArchiveProject[] = [
+  { date: 'OCT 2023', id: 'HEALTHCARE_FRAUD_DETECTION_V1', stack: ['Python', 'Azure', 'XGBoost'], link: '#' },
+  { date: 'AUG 2023', id: 'ECOMMERCE_RECSYS_ENGINE', stack: ['Torch', 'Redis', 'AWS'], link: '#' },
+  { date: 'MAY 2023', id: 'CRYPTO_SENTIMENT_ANALYZER', stack: ['BERT', 'Twitter API', 'FastAPI'], link: '#' },
+  { date: 'FEB 2023', id: 'TRAFFIC_FLOW_OPTIMIZATION', stack: ['OpenCV', 'YOLOv8', 'Edge'], link: '#' },
+  { date: 'NOV 2022', id: 'SUPPLY_CHAIN_DIGITAL_TWIN', stack: ['SimPy', 'React', 'MongoDB'], link: '#' },
 ];
 
 export const EXPERIENCE: Experience[] = [

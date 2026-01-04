@@ -7,7 +7,7 @@ export const SkillsMatrix: React.FC = () => {
     {
       title: "GENERATIVE AI MODULE",
       description: "Architecting retrieval pipelines and agentic workflows for high-accuracy constraints.",
-      tags: ["RAG", "LangGraph", "Vector DBs", "Prompt Eng", "Evaluation", "Gemini API"],
+      tags: ["RAG", "LangGraph", "Vector DBs", "Prompt Eng", "Evaluation", "Gemini API", "Explainable AI / XAI"],
       stats: { exp: "4Y", proj: "12", status: "ACTIVE" },
       isHighlight: true,
       icon: Brain

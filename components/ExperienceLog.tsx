@@ -12,6 +12,65 @@ export const ExperienceLog: React.FC = () => {
           {/* The Timeline Backbone */}
           <div className="relative border-l-3 border-black space-y-12 pb-4">
             
+            {/* --- RESEARCH ARTIFACT INJECTION --- */}
+            <div className="relative pl-12 group">
+                
+                {/* Node: White Box for Documents */}
+                <div className="absolute top-8 -left-[11px] w-[19px] h-[19px] bg-white border-3 border-black transition-all duration-300 group-hover:scale-125 z-10"></div>
+                
+                {/* Connector */}
+                <div className="absolute top-[41px] left-0 w-12 h-[3px] bg-black"></div>
+
+                {/* The Artifact Card: Double Border Effect */}
+                <div className="w-full bg-white border-3 border-black shadow-hard transition-all duration-300 group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 relative">
+                    {/* The 4px White Gap */}
+                    <div className="p-[4px] bg-white">
+                        {/* Inner 1px Border Container */}
+                        <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5">
+                            
+                            {/* Header */}
+                            <div className="flex items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
+                                <span className="text-black">📄 PUBLISHED_RESEARCH</span>
+                                <span className="text-gray-400">//</span>
+                                <span>SPRINGER_NATURE</span>
+                            </div>
+
+                            {/* Main Content */}
+                            <div>
+                                <h3 className="text-2xl md:text-3xl font-black uppercase leading-[0.9] mb-3">
+                                    Fake News Detection Using Explainable AI (XAI)
+                                </h3>
+                                <p className="font-serif italic text-lg text-gray-600">
+                                    Proceedings of DaSET 2024.
+                                </p>
+                            </div>
+
+                            {/* The Impact Block */}
+                            <div className="bg-white border-l-4 border-black p-4 font-mono text-sm leading-relaxed text-gray-800">
+                                <span className="font-bold bg-black text-white px-1 mr-2">IMPACT</span>
+                                Implemented SHAP & LIME to solve the 'Black Box' problem in NLP, increasing model trust metrics.
+                            </div>
+
+                            {/* Footer: Tags & Action */}
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-2 border-t border-gray-300 mt-2">
+                                <div className="flex flex-wrap gap-2">
+                                    {['Applied XAI', 'NLP', 'Research', 'Transparency'].map(tag => (
+                                        <span key={tag} className="border border-black bg-white px-2 py-1 text-[10px] font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors cursor-default">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                                <button className="font-bold font-mono text-xs uppercase bg-black text-white px-4 py-2 hover:bg-power transition-colors flex items-center gap-2">
+                                    [⬇ READ_ABSTRACT]
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Standard Experience Items */}
             {EXPERIENCE.map((exp) => (
               <div key={exp.id} className="relative pl-12 group">
                 

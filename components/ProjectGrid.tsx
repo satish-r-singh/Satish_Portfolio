@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PROJECTS } from '../constants';
+import { PROJECTS, ARCHIVE_PROJECTS } from '../constants';
 import { Button } from './Button';
-import { Filter, Search, Terminal } from 'lucide-react';
+import { Filter, Search, Terminal, ArrowUpRight } from 'lucide-react';
 import { SectionDivider } from './SectionDivider';
 
 interface ProjectGridProps {
@@ -105,8 +105,10 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
              </div>
           </div>
 
-          {/* Right Content: Grid */}
-          <div className="flex-grow p-6 md:p-12 lg:p-16 bg-gray-50">
+          {/* Right Content: Grid & Archive */}
+          <div className="flex-grow p-6 md:p-12 lg:p-16 bg-gray-50 flex flex-col">
+            
+            {/* 1. HERO PROJECTS GRID */}
             <div className="flex items-end justify-between mb-12 border-b-3 border-black pb-4">
               <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">
                 DEPLOYED_UNITS
@@ -114,7 +116,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
               <span className="hidden md:block font-mono font-bold text-xl">[COUNT: {filteredProjects.length}]</span>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-24">
               {filteredProjects.map((project) => (
                 <div key={project.id} className="group relative flex flex-col border-3 border-black bg-white transition-all duration-200 hover:bg-black hover:text-white shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1">
                   {/* Image Header */}
@@ -159,6 +161,59 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                   </div>
               )}
             </div>
+
+            {/* 2. THE PROJECT ARCHIVE (Tier 2 Display) */}
+            <div className="w-full">
+                <div className="font-mono text-xs md:text-sm font-bold text-gray-500 mb-4 border-b border-black pb-2">
+                    {'>'} SELECT * FROM OLDER_REPOS WHERE STATUS='PUBLIC'
+                </div>
+                
+                <div className="w-full border-t-2 border-black bg-white">
+                    {/* Table Header */}
+                    <div className="hidden md:grid grid-cols-12 gap-4 py-3 border-b border-gray-300 font-mono text-xs font-bold text-gray-500 px-4">
+                        <div className="col-span-2">DATE</div>
+                        <div className="col-span-4">PROJECT_ID</div>
+                        <div className="col-span-5">TECH_STACK</div>
+                        <div className="col-span-1 text-right">ACTION</div>
+                    </div>
+
+                    {/* Rows */}
+                    <div className="flex flex-col">
+                        {ARCHIVE_PROJECTS.map((repo, idx) => (
+                            <a 
+                                key={idx} 
+                                href={repo.link}
+                                className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 border-b border-gray-200 hover:bg-power transition-colors items-center px-4 relative"
+                            >
+                                {/* Date */}
+                                <div className="col-span-2 font-mono text-xs font-bold text-gray-500 group-hover:text-black">
+                                    {repo.date}
+                                </div>
+                                
+                                {/* Project ID */}
+                                <div className="col-span-4 font-black text-sm md:text-lg uppercase tracking-tight text-black group-hover:text-black">
+                                    {repo.id}
+                                </div>
+                                
+                                {/* Tech Stack */}
+                                <div className="col-span-5 flex flex-wrap gap-2">
+                                    {repo.stack.map(tag => (
+                                        <span key={tag} className="text-[10px] font-mono border border-gray-300 bg-gray-50 px-1.5 py-0.5 text-gray-600 group-hover:border-black group-hover:bg-black group-hover:text-white transition-colors uppercase">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                                
+                                {/* Action Icon */}
+                                <div className="col-span-1 flex justify-end">
+                                    <ArrowUpRight size={20} className="text-gray-400 group-hover:text-black group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
           </div>
       </div>
     </section>

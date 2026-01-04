@@ -3,6 +3,7 @@ import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, Layers } 
 import { generateAgentResponse, generateSpeech } from '../services/geminiService';
 import { LiveArchitectureDiagram, ActiveNode } from './LiveArchitectureDiagram';
 import { TechStackModal } from './TechStackModal';
+import { TrustMarquee } from './TrustMarquee';
 import ReactMarkdown from 'react-markdown';
 
 interface HeroProps {
@@ -253,22 +254,28 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                 />
             </div>
 
-            {/* BLOCK 3: LOGIC CONSOLE (Separated) */}
-            <div className="w-full bg-gray-50 border-3 border-black relative z-10 flex flex-col shadow-hard mt-4">
-                
-                {/* Header Strip */}
-                <div className="flex items-center justify-between px-4 py-3 border-b-3 border-black bg-white">
-                     <span className="font-mono text-xs font-bold uppercase tracking-widest">REAL-TIME SYSTEM LOGIC</span>
-                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                        <span className="font-mono text-xs font-bold text-green-600 uppercase">LIVE</span>
-                     </div>
+            {/* BLOCK 3: LOGIC CONSOLE & TRUST MARQUEE */}
+            <div className="flex flex-col gap-0">
+                {/* LOGIC CONSOLE */}
+                <div className="w-full bg-gray-50 border-3 border-black relative z-10 flex flex-col shadow-hard mt-4">
+                    
+                    {/* Header Strip */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b-3 border-black bg-white">
+                        <span className="font-mono text-xs font-bold uppercase tracking-widest">REAL-TIME SYSTEM LOGIC</span>
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span className="font-mono text-xs font-bold text-green-600 uppercase">LIVE</span>
+                        </div>
+                    </div>
+
+                    {/* The Terminal */}
+                    <div className="w-full h-[300px] bg-black p-4 md:p-6 overflow-hidden">
+                        <LiveArchitectureDiagram activeNode={activeNode} />
+                    </div>
                 </div>
 
-                {/* The Terminal */}
-                <div className="w-full h-[300px] bg-black p-4 md:p-6 overflow-hidden">
-                     <LiveArchitectureDiagram activeNode={activeNode} />
-                </div>
+                {/* TRUST PROTOCOL (MARQUEE) */}
+                <TrustMarquee />
             </div>
 
         </div>
