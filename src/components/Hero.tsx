@@ -93,9 +93,21 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
             return;
         }
 
+        // --- NEW CONNECTION LOGIC STARTS HERE ---
+
+        // 1. Debug Logs (Check your browser console F12 to see these!)
+        console.log("--- DEBUG: CONNECTION CHECK ---");
+        console.log("1. Environment Mode:", import.meta.env.MODE);
+        console.log("2. VITE_API_URL from Config:", import.meta.env.VITE_API_URL);
+
+        // 2. Select the correct URL
+        // If VITE_API_URL exists (Cloudflare), use it. Otherwise use localhost (Laptop).
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        console.log("3. Final Target URL:", `${API_URL}/chat`);
+
         // RAG Connection
         try {
-            const apiResponse = await fetch("http://localhost:8000/chat", {
+            const apiResponse = await fetch(`${API_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: queryText, session_id: "guest_browser" }),
@@ -117,7 +129,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
             if (!isAudioEnabled) setTimeout(() => setActiveNode('IDLE'), 5000);
         }
     };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         processQuery(input);
