@@ -1,8 +1,15 @@
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import uvicorn
 from dotenv import load_dotenv
+from prompts import get_chat_prompt, get_jd_analysis_prompt
+
+# New imports for PDF reading
+from pypdf import PdfReader
+import io
+
 
 # --- AI & DATABASE LIBRARIES ---
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
@@ -37,6 +44,16 @@ llm = ChatGoogleGenerativeAI(
     temperature=0.3, # Low temperature = More factual, less creative
     google_api_key=GOOGLE_API_KEY
 )
+
+# Load Resume Context for JD Analysis
+try:
+    with open("resume.txt", "r", encoding="utf-8") as f:
+        RESUME_CONTEXT = f.read()
+except FileNotFoundError:
+    print("⚠️ WARNING: resume.txt not found. JD Analysis will lack context.")
+    RESUME_CONTEXT = "Profile: Satish Rohit Singh (Lead Data Scientist)."
+
+
 
 # 3. The Application
 app = FastAPI(title="Rohit Portfolio API - RAG Enabled")
@@ -77,6 +94,9 @@ def get_context(query: str):
         print(f"Error retrieving context: {e}")
         return ""
 
+# ---------------------------------------------------------
+# ENDPOINT 1: THE CHATBOT (RAG)
+# ---------------------------------------------------------
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
     try:
@@ -84,24 +104,11 @@ async def chat_endpoint(request: ChatRequest):
         print(f"User: {user_msg}")
 
         # --- STEP 1: RETRIEVAL ---
-        print("🔍 Searching memory...")
         context = get_context(user_msg)
-        print(f"   Found context length: {len(context)} chars")
-
-        # --- STEP 2: AUGMENTATION (The Prompt) ---
-        system_instruction = f"""
-        You are the AI Assistant for Rohit Singh, a Lead Data Scientist.
-        Use the following CONTEXT from his Resume/Projects to answer the user.
         
-        CONTEXT:
-        {context}
-        
-        RULES:
-        1. If the answer is in the Context, be specific (quote technologies, dates).
-        2. If the Context is empty or irrelevant, politely say you don't have that specific detail about Rohit, but answer general AI questions normally.
-        3. Keep tone: Professional, Confident, "Neo-Brutalist" (concise).
-        4. Do NOT mention "According to the documents". Just answer naturally.
-        """
+        # --- STEP 2: AUGMENTATION (Use the function from prompts.py) ---
+        # The prompt logic is now hidden inside this function call
+        system_instruction = get_chat_prompt(context) 
 
         messages = [
             SystemMessage(content=system_instruction),
@@ -111,20 +118,35 @@ async def chat_endpoint(request: ChatRequest):
         # --- STEP 3: GENERATION ---
         ai_response = llm.invoke(messages)
         
-        print(f"Agent: {ai_response.content}")
-        
-        return {
-            "response": ai_response.content,
-            "action": "reply"
-        }
+        return {"response": ai_response.content, "action": "reply"}
 
     except Exception as e:
         print(f"ERROR: {str(e)}")
-        return {
-            "response": "⚠️ SYSTEM ERROR: I am having trouble accessing my memory banks.",
-            "error": str(e)
-        }
+        return {"response": "⚠️ Error accessing memory banks.", "error": str(e)}
+
+@app.post("/analyze_jd")
+async def analyze_jd(file: UploadFile = File(...)):
+    try:
+        # 1. Read PDF
+        content = await file.read()
+        pdf_reader = PdfReader(io.BytesIO(content))
+        jd_text = ""
+        for page in pdf_reader.pages:
+            jd_text += page.extract_text()
+        
+        jd_text = jd_text[:10000]
+
+        # 2. Get Prompt (Using the function from prompts.py)
+        prompt = get_jd_analysis_prompt(jd_text, RESUME_CONTEXT)
+
+        # 3. Invoke LLM
+        response = llm.invoke(prompt)
+        
+        return {"response": response.content}
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return {"response": "I had trouble reading that PDF. Please try a standard text-based PDF."}
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

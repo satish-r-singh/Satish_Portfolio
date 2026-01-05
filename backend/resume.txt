@@ -1,0 +1,93 @@
+# Satish R Singh - Resume
+
+## Contact Information
+* [cite_start]**Name:** Satish R Singh [cite: 1]
+* **Role:** Group-Lead Data Science | [cite_start]GenAI, AI & Strategy [cite: 1]
+* [cite_start]**Location:** Abu Dhabi - UAE [cite: 1]
+* [cite_start]**Phone:** +971 50 126 5789 [cite: 1]
+* [cite_start]**Email:** satishk.singh@outlook.com [cite: 1]
+* [cite_start]**Links:** linkedin.com/in/satish-r-singh | github.com/satish-r-singh [cite: 1]
+
+## Professional Summary
+[cite_start]Lead Data Scientist with 15+ years of IT experience, including 8+ years in data science, specializing in AI/ML to solve real-world business problems. [cite: 1] [cite_start]Expert in building high-performing data science teams from scratch and driving end-to-end development of data-driven solutions. [cite: 2] [cite_start]A creative thinker with a unique background in arts, excelling at innovative problem-solving and effectively communicating data insights through compelling storytelling and visualization. [cite: 3] [cite_start]Proven track record of delivering multimillion-dollar cost savings and revenue growth through GenAl, predictive modelling, NLP, and Computer Vision. [cite: 4] [cite_start]Upskilled aspiring data professionals at Emirates Institute of Finance, Mindworx, Simplilearn, Vinsys, and The Knowledge Academy, delivering comprehensive training on advanced ML and Al concepts to bridge the gap between theory and industry application. [cite: 5]
+
+## Technical Expertise
+* [cite_start]**GenAI & Agentic Systems:** Agentic Workflows (LangChain/LangGraph, CrewAl), Multi-Modal Models (Audio/Video/Image), RAG Pipelines, Fine-Tuning. [cite: 6]
+* [cite_start]**Computer Vision & NLP:** YOLO, CNN, Mask R-CNN, OpenCV, BERT, Image Segmentation, HuggingFace. [cite: 7]
+* [cite_start]**Machine Learning:** Predictive Modeling, Model Interpretability (SHAP/LIME), Time Series Forecasting (ARIMA/Prophet), Clustering, Scikit-Learn, TensorFlow, PyTorch, XGBoost, CatBoost, LightGBM. [cite: 8]
+* [cite_start]**MLOps, LLMOps & Cloud:** AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLflow/W&B). [cite: 9]
+
+## Professional Experience
+
+### Elderberry Group (IgniteCPP, E-Centive, Beam, Mission Mobile)
+**Role:** Lead Data Scientist (Group Strategy & Architecture)
+**Location:** Abu Dhabi, UAE
+**Dates:** Sep 2022 - Present
+* [cite_start]**Group Data Strategy & Leadership:** Serve as the Group Data Science Lead across 4 distinct product ventures (SalesTech, EdTech, FinTech), driving the Al roadmap and managing shared engineering resources to deliver scalable cross-platform solutions. [cite: 9]
+* [cite_start]**Team Building:** Built the Data Science division from scratch, recruiting the core team and establishing MLOps best practices. [cite: 10]
+* [cite_start]**GenAI Transition:** Leading the transition toward GenAl-first architectures and agentic workflows. [cite: 11]
+* [cite_start]**Voice Al & Automation (E-Centive):** Led the "Buy vs. Build" evaluation for contact center automation (40+ agents). [cite: 11] [cite_start]Developed an internal GenAl voice/chat POC to validate feasibility, ultimately selecting VAPI to optimize long-term maintenance costs and scalability. [cite: 12]
+* [cite_start]**RAG Knowledge Assistant (E-Centive/IgniteCPP):** Developed a GenAl search tool allowing call center agents to instantly query thousands of internal documents. [cite: 13] [cite_start]Impact: Reduced Time-to-Resolution (TTR) by 20% and accelerated new agent onboarding by replacing manual document searches. [cite: 14]
+* [cite_start]**GenAl Learning Ecosystem (E-Centive):** Architected a multi-modal content engine that ingests raw OEM assets (Images, PDFs, Videos) to automatically generate interactive training modules. [cite: 15] [cite_start]Impact: One-stop Integrated learning platform, replacing external field training teams. [cite: 16]
+* [cite_start]**LLM-Driven Data Transformation (E-Centive/IgniteCPP):** Integrated lightweight LLMs into ingestion pipelines to automatically sanitize and structure noisy, human-entered data. [cite: 17] [cite_start]Impact: Automated a previously manual verification workflow, delivering immediate cost savings and reclaiming engineering hours. [cite: 18]
+* [cite_start]**Retail Store Segmentation (IgniteCPP):** Solved unfair sales evaluations by developing clustering models (K-Means, DBSCAN) to segment retail outlets. [cite: 19] [cite_start]Impact: Enabled targeted marketing and fair peer-to-peer benchmarking. [cite: 20]
+* [cite_start]**Sales Gamification Engine (IgniteCPP):** Designed a dynamic, formula-based scoring optimization system to track daily sales performance. [cite: 20] [cite_start]Impact: Increased workforce productivity and engagement through data-driven incentives, improving channel performance by 27%. [cite: 21]
+* [cite_start]**Alternative Credit Scoring Engine (Beam/Mission Mobile):** Engineered a hybrid vetting system that moves beyond traditional bureau scores by ingesting alternative data (Telco logs, Deeds Office, Bank Statements). [cite: 22] [cite_start]Impact: Improved lending decision accuracy for "thin-file" customers, expanding the addressable market while minimizing default risk. [cite: 23]
+
+### Zensar (Client: Avis Fleet)
+**Location:** Johannesburg, South Africa
+
+**Role:** Senior Data Scientist
+**Dates:** July 2021 - Aug 2022
+* [cite_start]**Used Car Price Prediction:** Built a multi-model valuation engine using Random Forest & XGBoost to estimate buy/sell prices with 96% R-square accuracy. [cite: 24] [cite_start]Impact: Increased average revenue per car by 10% and reduced transaction cycle times by 15%. [cite: 25]
+* [cite_start]**Vehicle Residual Value Strategy:** Developed risk models using Elastic Net & Lasso Regression to optimize monthly premium calculations. [cite: 25] [cite_start]Impact: Reduced financial losses from estimation errors by 12% and boosted customer satisfaction by 7%. [cite: 26]
+
+**Role:** Technical Product Owner/Manager - Data Science
+**Dates:** Oct 2019 - Jun 2021
+* [cite_start]**Al Vehicle Damage Detection:** Launched a SaaS offering on Azure using CNN, Mask R-CNN, and YOLO to automate damage assessment from images. [cite: 26] [cite_start]Impact: Reduced claim settlement lifecycle by 4 days and achieved annual savings of ~USD 200,000 (ZAR 3.5M). [cite: 27]
+* [cite_start]**Insurance Fraud Detection:** Led the implementation of an ML fraud detection system (92% accuracy) in collaboration with AIG. [cite: 27] [cite_start]Impact: Reduced fraudulent claims by 25%, saving ~USD 1 Million (ZAR 15M). [cite: 28]
+
+**Role:** Data Scientist
+**Dates:** July 2018 - Sep 2019
+* [cite_start]**Car Rental Demand Forecast:** Built Time Series models (ARIMA, STL) to predict fleet demand across locations. [cite: 29] [cite_start]Impact: Improved fleet utilization by 15%, optimizing inventory stocking levels. [cite: 30]
+* [cite_start]**Fuel Card Fraud Detection:** Implemented anomaly detection (Isolation Forest) to flag irregular transaction patterns, achieving 88% detection accuracy. [cite: 31]
+
+**Role:** Previous Roles (Promoted Internally)
+**Roles:** Data Engineer (2018), Technical Specialist (2016-2017), Senior Software Engineer (2014-2016)
+**Dates:** Mar 2014 - Jun 2018
+* [cite_start]**Platform Modernization (AS/400 to Azure):** Co-led the massive migration of legacy leasing applications to Microsoft Azure SaaS, managing a team of 60+ consultants. [cite: 32] [cite_start]This laid the cloud infrastructure foundation for future Al initiatives. [cite: 33]
+* [cite_start]**Predictive Maintenance POC:** Developed the organization's first Big Data POC using Apache Spark, proving the feasibility of sensor-based vehicle analysis. [cite: 34]
+
+### GalaxE Solutions (Client: CVS Caremark)
+**Role:** Senior Software Engineer
+**Location:** Bangalore, India
+**Dates:** Jan 2011 - Mar 2014
+* [cite_start]**Enterprise Platform Consolidation (Aetna to CVS):** Led the offshore migration of Aetna's pharmacy claims from Mainframe systems to the CVS RxClaim (AS/400) adjudication engine. [cite: 36] [cite_start]Impact: Streamlined claims processing and ensured accurate billing by implementing complex "Buy Pricing" logic for millions of records. [cite: 37]
+* [cite_start]**Project Leadership:** Managed the project lifecycle from inception to delivery, coordinating between US stakeholders and the offshore development team to ensure zero-defect delivery. [cite: 38]
+
+### IBM India (Client: CVS Caremark)
+**Role:** Associate System Engineer
+**Location:** Bangalore, India
+**Dates:** Jul 2010 - Jan 2011
+* [cite_start]**RxClaim Engine Support:** Maintained the critical pharmacy claims adjudication engine, enhancing software modules to meet dynamic regulatory government updates and business requirements. [cite: 39]
+
+## Mentorship & Thought Leadership
+**Role:** Corporate Trainer & Mentor
+**Institutions:** Emirates Institute of Finance, Mindworx, Simplilearn, Vinsys, The Knowledge Academy
+**Location:** Hybrid, Remote
+**Dates:** 2021 - Present
+* [cite_start]**Executive Education & Upskilling:** Delivered comprehensive corporate training programs on Data Science, AI/ML, and GenAl to mid-to-senior level professionals. [cite: 40]
+* [cite_start]**Curriculum Delivery:** Bridged the gap between academic theory and industry application by guiding cohorts through real-world capstone projects, covering topics from Al Ethics to Advanced Deep Learning. [cite: 41]
+* [cite_start]**Career Development:** Mentored aspiring data scientists on career pivots, portfolio building, and technical interview preparation, directly contributing to the growth of the regional data talent pool. [cite: 42]
+
+## Education & Publications
+* [cite_start]**Master of Science in Data Science:** Liverpool John Moore's University, UK (2022-2023) [cite: 43]
+* [cite_start]**Published Research:** Main author of "Fake News Detection Using Explainable Artificial Intelligence", published by Springer Nature (Proceedings of DaSET 2024). [cite: 43] [cite_start]Focus: Applied XAI (SHAP/LIME) and NLP techniques to enhance model transparency and trust in automated detection systems. [cite: 44]
+* [cite_start]**Executive PGP in Data Science:** IIIT Bangalore, India (2021-2022) [cite: 45]
+* [cite_start]**Bachelor of Engineering in Electronics & Communications:** Manipal University, India (2006-2010) [cite: 45]
+
+## Certification & Awards
+* [cite_start]**100X Engineers:** Successfully completed the Applied Gen Al Cohort 4 by 100x Engineers. [cite: 45]
+* [cite_start]**Cloud & Big Data:** Microsoft Certified: Azure Data Fundamentals (DP-900), Azure Fundamentals (AZ-900), Hortonworks Certified Hadoop Developer (HDPCD). [cite: 45]
+* [cite_start]**Performance Awards:** Recipient of the "Star of the Quarter" (Africa Region) award twice (2016, 2017) and multiple Monthly Performance Awards at Avis Fleet and GalaxE Solutions. [cite: 46]
+* [cite_start]**Delivery Excellence:** Recognized for maintaining a ZERO defect count across 14 consecutive projects led from offshore. [cite: 47]
