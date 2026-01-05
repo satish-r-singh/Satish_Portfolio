@@ -73,6 +73,49 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
         }
     };
 
+    // 1. Reference to the hidden file input
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+    // 2. Handler for when a user selects a PDF
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // UI Feedback
+        setResponse("Analyzing Job Description... Reading file...");
+        setIsLoading(true);
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Dynamic URL (Production vs Local)
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+        try {
+            const res = await fetch(`${API_URL}/analyze_jd`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            setResponse(data.response);
+
+            // Optional: Audio feedback
+            if (isAudioEnabled) {
+                const audioData = await generateSpeech(data.response);
+                if (audioData) playAudio(audioData);
+            }
+
+        } catch (error) {
+            console.error(error);
+            setResponse("⚠️ Error reading file. Please ensure the Backend is running and 'pypdf' is installed.");
+        } finally {
+            setIsLoading(false);
+            // Reset the input so the same file can be selected again if needed
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
+
     const processQuery = async (queryText: string) => {
         if (!queryText.trim()) return;
 
@@ -164,9 +207,8 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
         <section className="relative w-full border-b-3 border-black flex flex-col lg:flex-row">
 
             {/* LEFT COLUMN (75%): The Command Stack */}
-            {/* <div className="w-full lg:w-[75%] flex flex-col justify-start p-6 lg:p-20 bg-white border-b-3 lg:border-b-0 lg:border-r-3 border-black z-10"> */}
             <div className="w-full lg:w-[75%] flex flex-col justify-start px-6 py-6 lg:px-14 lg:py-6 bg-white border-b-3 lg:border-b-0 lg:border-r-3 border-black z-10">
-
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".pdf" style={{ display: 'none' }} />
 
                 {/* Typography - COMPACTED */}
                 <div className="mb-6">
@@ -221,12 +263,13 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
 
                     {/* BLOCK 2: TOOL ARRAY - COMPACTED */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 relative z-20">
-                        <ToolButton icon={FileText} label="UPLOAD JD" onClick={() => alert('Auth Required')} />
+                        <ToolButton icon={FileText} label="UPLOAD JD" onClick={() => fileInputRef.current?.click()} />
                         <ToolButton icon={Briefcase} label="CASE STUDIES" onClick={() => onNavigateToProjects(null)} />
                         <ToolButton icon={Code} label="TECH STACK" onClick={() => {
                             setResponse("My Stack: Python, TensorFlow, React, Gemini API, Pinecone, FastAPI, Docker, Kubernetes.");
                         }} />
-                        <ToolButton icon={Download} label="RESUME" onClick={() => window.open('#')} className="text-power border-power" />
+
+                        <ToolButton icon={Download} label="RESUME" onClick={() => window.open('/Satish_R_Singh_Group_Lead_Data_Scientist.pdf', '_blank')} className="text-power border-power" />
                     </div>
 
                     {/* BLOCK 3: LOGIC CONSOLE - COMPACTED */}
@@ -276,7 +319,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                         [ ROLE_DEFINITION ]
                     </div>
                     <h2 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-[0.85]">
-                        GROUP<br />LEAD<br />DATA<br />SCIENTIST
+                        GROUP-LEAD<br />AI & DATA<br />SCIENCE
                     </h2>
                 </div>
 
