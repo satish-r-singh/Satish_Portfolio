@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { SYSTEM_INSTRUCTION } from '../constants';
+// import { SYSTEM_INSTRUCTION } from '../constants';
 
 // Initialize the API client
 const apiKey = process.env.API_KEY || '';
@@ -30,7 +30,7 @@ Since I can't connect to the neural core (Gemini API), please explore the "Deplo
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
+        // systemInstruction: SYSTEM_INSTRUCTION,
       }
     });
 
