@@ -5,9 +5,10 @@ python-multipart>=0.0.9 # For file uploads (Resumes/JDs)
 
 # AI & Agents (Gemini 2.0 Support)
 langchain>=0.3.0
-langchain-google-genai>=2.0.0 # Critical for Gemini 2.0 Flash
-google-generativeai>=0.7.0    # Official Google SDK
+langchain-google-genai # Critical for Gemini 2.0 Flash
+# google-generativeai>=0.7.0    # Official Google SDK
 langchain-community
+google-genai
 
 
 # Vector Database (Serverless)
@@ -17,3 +18,5 @@ pinecone>=5.0.0         # Supports the new serverless control plane
 python-dotenv>=1.0.1    # For loading API Keys
 pandas>=2.2.0           # For data manipulation
 pypdf>=4.0.0            # For parsing PDF resumes
+
+pydantic

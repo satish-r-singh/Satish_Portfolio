@@ -10,14 +10,17 @@ import { Marquee } from './components/Marquee';
 
 const App: React.FC = () => {
   const [projectFilter, setProjectFilter] = useState<string | null>(null);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+
+  // We keep this state to set the INITIAL value for Hero, 
+  // but we don't need to pass the setter around anymore.
+  // Default is false (Sound Off)
+  const [isAudioEnabled] = useState(false);
 
   // Create a ref for the projects section for scrolling
   const projectsSectionRef = useRef<HTMLDivElement>(null);
 
   const handleNavigateToProjects = (filter: string | null) => {
     setProjectFilter(filter);
-    // We need to wait a tick for the state to update or just scroll immediately
     setTimeout(() => {
       if (projectsSectionRef.current) {
         projectsSectionRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -30,10 +33,18 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-power selection:text-white">
-      <Header isAudioEnabled={isAudioEnabled} setIsAudioEnabled={setIsAudioEnabled} />
+
+      {/* UPDATED: No props needed for Header anymore */}
+      <Header />
+
       <Marquee />
+
       <main>
-        <Hero onNavigateToProjects={handleNavigateToProjects} isAudioEnabled={isAudioEnabled} />
+        {/* UPDATED: Hero receives the initial state, but manages toggling internally */}
+        <Hero
+          onNavigateToProjects={handleNavigateToProjects}
+          isAudioEnabled={isAudioEnabled}
+        />
 
         <CoreDirectives />
 
@@ -44,6 +55,7 @@ const App: React.FC = () => {
         <ExperienceLog />
         <SkillsMatrix />
       </main>
+
       <Footer />
     </div>
   );

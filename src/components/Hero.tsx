@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, Layers } from 'lucide-react';
-import { generateSpeech } from '../services/geminiService';
+import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers } from 'lucide-react';
 import { LiveArchitectureDiagram, ActiveNode } from './LiveArchitectureDiagram';
 import { TechStackModal } from './TechStackModal';
 import { TrustMarquee } from './TrustMarquee';
@@ -11,16 +10,53 @@ interface HeroProps {
     isAudioEnabled: boolean;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled }) => {
+export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled: initialAudioState }) => {
+    // --- STATE ---
     const [input, setInput] = useState('');
     const [response, setResponse] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [isRecording, setIsRecording] = useState(false);
-    const [isTechStackOpen, setIsTechStackOpen] = useState(false);
-    const [activeNode, setActiveNode] = useState<ActiveNode>('IDLE');
-    const resultRef = useRef<HTMLDivElement>(null);
-    const recognitionRef = useRef<any>(null);
+    const [isListening, setIsListening] = useState(false);
+    const [isTechStackOpen, setIsTechStackOpen] = useState(false); // FIXED: Added this back!
 
+    // AUDIO STATE
+    // We initialize with the prop, but allow local toggling
+    const [isAudioOn, setIsAudioOn] = useState(initialAudioState);
+
+    const [isPlaying, setIsPlaying] = useState(false);
+    const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+
+    // --- REFS (Crucial for fixing the "Stale State" bug) ---
+    const isAudioOnRef = useRef(isAudioOn);
+    const silenceTimer = useRef<any>(null);
+    const recognitionRef = useRef<any>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Sync Ref with State immediately whenever it changes
+    useEffect(() => {
+        isAudioOnRef.current = isAudioOn;
+    }, [isAudioOn]);
+
+
+    // --- LOGIC: AUDIO CONTROL ---
+    const toggleAudio = () => {
+        const newState = !isAudioOn;
+        setIsAudioOn(newState);
+
+        if (newState && response) {
+            // Turning ON: Read existing text immediately
+            playAudioResponse(response);
+        } else if (!newState) {
+            // Turning OFF: Stop audio immediately
+            if (currentAudioRef.current) {
+                currentAudioRef.current.pause();
+                currentAudioRef.current.currentTime = 0;
+            }
+            setIsPlaying(false);
+            setActiveNode('IDLE');
+        }
+    };
+
+    // --- LOGIC: TOOL DETERMINATION ---
     const determineTool = (text: string): ActiveNode => {
         const t = text.toLowerCase();
         if (t.includes('resume') || t.includes('job') || t.includes('hire') || t.includes('jd') || t.includes('upload')) return 'JD_MATCHER';
@@ -28,9 +64,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
         return 'RAG';
     };
 
+    // --- LOGIC: INTENT PROCESSING ---
     const processIntent = (text: string) => {
         const t = text.toLowerCase();
-        // Strict Guardrail: Only navigate if explicit action verb is used
         const hasAction = t.includes('show') || t.includes('view') || t.includes('go') || t.includes('list') || t.includes('navigate');
         const hasTarget = t.includes('project') || t.includes('work') || t.includes('case study');
 
@@ -38,57 +74,220 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
             if (t.includes('rag')) onNavigateToProjects('RAG');
             else if (t.includes('finance') || t.includes('agent')) onNavigateToProjects('Agents');
             else if (t.includes('iot') || t.includes('data')) onNavigateToProjects('Data Eng');
-            else onNavigateToProjects(null); // Show all
+            else onNavigateToProjects(null);
             return true;
         }
         return false;
     };
 
-    const decodeAudioData = (base64String: string) => {
-        const binaryString = atob(base64String);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes.buffer;
-    };
 
-    const playAudio = async (base64Audio: string) => {
+
+    // --- LOGIC: AUDIO OUTPUT (TTS) ---
+    const playAudioResponse = async (text: string) => {
+        if (!isAudioOnRef.current) return;
+
         try {
-            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
-            const audioBuffer = await audioContext.decodeAudioData(decodeAudioData(base64Audio));
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffer;
-            source.connect(audioContext.destination);
+            // Stop previous audio if playing
+            if (currentAudioRef.current) {
+                currentAudioRef.current.pause();
+            }
+            console.log("🔊 Requesting Audio...");
+            const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+            const res = await fetch(`${API_URL}/tts`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: text }),
+            });
+
+            if (!res.ok) {
+                const err = await res.text();
+                throw new Error(`Server returned ${res.status}: ${err}`);
+            }
+
+            const blob = await res.blob();
+
+            // --- DEBUG: CHECK FILE SIZE ---
+            console.log(`💿 Received Blob size: ${blob.size} bytes`);
+            console.log(`💿 Blob Type: ${blob.type}`);
+
+            if (blob.size < 500) {
+                // If it's tiny, it's likely a text error message disguised as a blob
+                const textError = await blob.text();
+                console.error("❌ Audio file is too small. Likely an error:", textError);
+                return;
+            }
+
+            // Create URL
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+
+            //Store ref so we can stop it later
+            currentAudioRef.current = audio;
 
             setActiveNode('SPEAKING');
-            source.start(0);
 
-            source.onended = () => {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("❌ Playback failed:", error);
+                    // This is usually 'NotAllowedError' (user didn't click) or 'NotSupportedError' (bad format)
+                });
+            }
+
+            audio.onended = () => {
+                setIsPlaying(false); // Reset playing state
                 setActiveNode('IDLE');
+                URL.revokeObjectURL(audioUrl);
             };
-        } catch (e) {
-            console.error("Audio Playback Error", e);
-            setActiveNode('IDLE');
+
+        } catch (error) {
+            console.error("Audio Pipeline Error:", error);
+        }
+    };
+    // --- LOGIC: VOICE INPUT (SMART LISTENING) ---
+    const handleMicClick = () => {
+        if (isListening) {
+            stopListening();
+            return;
+        }
+
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            alert("Voice input is not supported in this browser. Please use Chrome or Edge.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => {
+            setIsListening(true);
+            setResponse("Listening... (Speak naturally, I will wait for a pause)");
+            setInput('');
+        };
+
+        recognition.onresult = (event: any) => {
+            let finalTranscript = '';
+            // Build the final transcript
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                }
+            }
+
+            // Get the live interim result for the input box
+            const interimObj = event.results[event.results.length - 1];
+            const currentText = interimObj[0].transcript;
+
+            // Prefer final transcript if available, otherwise show interim
+            const displayText = finalTranscript || currentText;
+            setInput(displayText);
+
+            // SILENCE TIMER LOGIC
+            if (silenceTimer.current) clearTimeout(silenceTimer.current);
+
+            // Wait 2.5 seconds of silence before submitting
+            silenceTimer.current = setTimeout(() => {
+                recognition.stop();
+                if (displayText.trim().length > 0) {
+                    processQuery(displayText);
+                }
+            }, 2500);
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);
+            if (silenceTimer.current) clearTimeout(silenceTimer.current);
+        };
+
+        recognition.onerror = (event: any) => {
+            console.error("Speech Error:", event.error);
+            setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+    };
+
+    const stopListening = () => {
+        if (recognitionRef.current) recognitionRef.current.stop();
+        if (silenceTimer.current) clearTimeout(silenceTimer.current);
+        setIsListening(false);
+    };
+
+
+    // --- LOGIC: MAIN QUERY PROCESSOR ---
+    const [activeNode, setActiveNode] = useState<ActiveNode>('IDLE');
+
+    const processQuery = async (queryText: string) => {
+        if (!queryText || !queryText.trim()) return;
+
+        const tool = determineTool(queryText);
+        setActiveNode('USER_INPUT');
+        setTimeout(() => setActiveNode('ROUTER'), 400);
+        setTimeout(() => setActiveNode(tool), 1000);
+
+        setIsLoading(true);
+        setResponse(null);
+
+        // 1. Intent Check
+        const navigated = processIntent(queryText);
+        if (navigated) {
+            setIsLoading(false);
+            const navMsg = "Command Acknowledged. Navigating to Projects Database.";
+            setResponse(navMsg);
+            playAudioResponse(navMsg);
+            setTimeout(() => setActiveNode('IDLE'), 3000);
+            return;
+        }
+
+        // 2. Backend Call
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+        try {
+            const apiResponse = await fetch(`${API_URL}/chat`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: queryText, session_id: "guest_browser" }),
+            });
+
+            if (!apiResponse.ok) throw new Error(`Server Error: ${apiResponse.status}`);
+
+            const data = await apiResponse.json();
+            setResponse(data.response);
+
+            // Play Audio (Ref check handles the mute state)
+            playAudioResponse(data.response);
+
+        } catch (error) {
+            console.error("Brain Connection Failed:", error);
+            setResponse("⚠️ ERROR: Neural Link Offline. Please check backend connection.");
+        } finally {
+            setIsLoading(false);
+            if (!isAudioOnRef.current) setTimeout(() => setActiveNode('IDLE'), 5000);
         }
     };
 
-    // 1. Reference to the hidden file input
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        processQuery(input);
+    };
 
-    // 2. Handler for when a user selects a PDF
+    // --- LOGIC: FILE UPLOAD (JD) ---
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // UI Feedback
         setResponse("Analyzing Job Description... Reading file...");
         setIsLoading(true);
 
         const formData = new FormData();
         formData.append("file", file);
 
-        // Dynamic URL (Production vs Local)
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
         try {
@@ -99,118 +298,24 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
 
             const data = await res.json();
             setResponse(data.response);
-
-            // Optional: Audio feedback
-            if (isAudioEnabled) {
-                const audioData = await generateSpeech(data.response);
-                if (audioData) playAudio(audioData);
-            }
+            playAudioResponse(data.response);
 
         } catch (error) {
             console.error(error);
-            setResponse("⚠️ Error reading file. Please ensure the Backend is running and 'pypdf' is installed.");
+            setResponse("⚠️ Error reading file. Please ensure the Backend is running.");
         } finally {
             setIsLoading(false);
-            // Reset the input so the same file can be selected again if needed
             if (fileInputRef.current) fileInputRef.current.value = '';
         }
-    };
-
-    const processQuery = async (queryText: string) => {
-        if (!queryText.trim()) return;
-
-        const tool = determineTool(queryText);
-        setActiveNode('USER_INPUT');
-        setTimeout(() => setActiveNode('ROUTER'), 400);
-        setTimeout(() => setActiveNode(tool), 1000);
-
-        setIsLoading(true);
-        setResponse(null);
-
-        // Intent Check
-        const navigated = processIntent(queryText);
-        if (navigated) {
-            setIsLoading(false);
-            setResponse("Command Acknowledged. Navigating to Projects Database...");
-            setTimeout(() => setActiveNode('IDLE'), 3000);
-            return;
-        }
-
-        // --- NEW CONNECTION LOGIC STARTS HERE ---
-
-        // 1. Debug Logs (Check your browser console F12 to see these!)
-        console.log("--- DEBUG: CONNECTION CHECK ---");
-        console.log("1. Environment Mode:", import.meta.env.MODE);
-        console.log("2. VITE_API_URL from Config:", import.meta.env.VITE_API_URL);
-
-        // 2. Select the correct URL
-        // If VITE_API_URL exists (Cloudflare), use it. Otherwise use localhost (Laptop).
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-        console.log("3. Final Target URL:", `${API_URL}/chat`);
-
-        // RAG Connection
-        try {
-            const apiResponse = await fetch(`${API_URL}/chat`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: queryText, session_id: "guest_browser" }),
-            });
-
-            if (!apiResponse.ok) throw new Error(`Server Error: ${apiResponse.status}`);
-            const data = await apiResponse.json();
-            setResponse(data.response);
-
-            if (isAudioEnabled) {
-                const audioData = await generateSpeech(data.response);
-                if (audioData) playAudio(audioData);
-            }
-        } catch (error) {
-            console.error("Brain Connection Failed:", error);
-            setResponse("⚠️ ERROR: Neural Link Offline. Please check backend connection.");
-        } finally {
-            setIsLoading(false);
-            if (!isAudioEnabled) setTimeout(() => setActiveNode('IDLE'), 5000);
-        }
-    };
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        processQuery(input);
-    };
-
-    const handleMouseDown = () => {
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-
-            recognition.onstart = () => setIsRecording(true);
-            recognition.onend = () => setIsRecording(false);
-            recognition.onresult = (event: any) => {
-                const transcript = event.results[0][0].transcript;
-                setInput(transcript);
-                processQuery(transcript);
-            };
-            recognition.start();
-            recognitionRef.current = recognition;
-        } else {
-            alert("Speech Recognition not supported.");
-        }
-    };
-
-    const handleMouseUp = () => {
-        if (recognitionRef.current) recognitionRef.current.stop();
     };
 
     return (
         <section className="relative w-full border-b-3 border-black flex flex-col lg:flex-row">
 
-            {/* LEFT COLUMN (75%): The Command Stack */}
+            {/* LEFT COLUMN (75%) */}
             <div className="w-full lg:w-[75%] flex flex-col justify-start px-6 py-6 lg:px-14 lg:py-6 bg-white border-b-3 lg:border-b-0 lg:border-r-3 border-black z-10">
                 <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".pdf" style={{ display: 'none' }} />
 
-                {/* Typography - COMPACTED */}
                 <div className="mb-6">
                     <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-3">
                         I AM SATISH'S<br />
@@ -221,38 +326,36 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                     </p>
                 </div>
 
-                {/* THE UNIFIED COMMAND STACK */}
                 <div className="w-full max-w-5xl flex flex-col gap-4">
 
-                    {/* BLOCK 1: CHAT INPUT - COMPACTED */}
+                    {/* BLOCK 1: CHAT INPUT */}
                     <div className="flex relative z-30 shadow-hard w-full h-14 md:h-16">
                         <form onSubmit={handleSubmit} className="flex-grow flex h-full">
                             <div className="flex-grow bg-white border-3 border-black border-r-0 relative flex items-center group h-full">
                                 <div className="pl-4 pr-3 text-black group-focus-within:text-power transition-colors">
                                     <Terminal size={20} strokeWidth={3} />
                                 </div>
+
                                 <input
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Ask me about my experience..."
-                                    // REMOVED 'uppercase', reduced font size
-                                    className="w-full h-full bg-transparent font-mono text-lg font-bold placeholder:text-gray-300 focus:outline-none border-none outline-none ring-0"
+                                    placeholder={isListening ? "Listening... (Pause to submit)" : "Ask me about my experience..."}
+                                    className="w-full h-full bg-transparent font-mono text-lg font-bold placeholder:text-gray-300 focus:outline-none border-none outline-none ring-0 pr-12"
                                 />
                             </div>
                         </form>
 
-                        {/* Voice Module Button */}
+                        {/* Voice Input Button */}
                         <button
-                            onMouseDown={handleMouseDown}
-                            onMouseUp={handleMouseUp}
-                            className={`w-16 md:w-20 border-t-3 border-b-3 border-black border-l-3 lg:border-l-0 flex flex-col items-center justify-center gap-0.5 transition-all duration-100 cursor-pointer ${isRecording ? 'bg-power text-white animate-pulse' : 'bg-black text-white hover:bg-gray-900'}`}
+                            onClick={handleMicClick}
+                            className={`w-16 md:w-20 border-t-3 border-b-3 border-black border-l-3 lg:border-l-0 flex flex-col items-center justify-center gap-0.5 transition-all duration-100 cursor-pointer ${isListening ? 'bg-power text-white animate-pulse' : 'bg-black text-white hover:bg-gray-900'}`}
+                            title="Speak to Satish"
                         >
-                            <Mic size={20} strokeWidth={2.5} />
+                            {isListening ? <MicOff size={20} /> : <Mic size={20} strokeWidth={2.5} />}
                             <span className="font-mono text-[9px] font-bold">VOICE</span>
                         </button>
 
-                        {/* Submit Button */}
                         <button
                             onClick={handleSubmit}
                             className="h-full px-6 bg-black text-white font-black text-lg border-3 border-l-0 border-black hover:bg-power transition-colors uppercase flex items-center gap-2 tracking-tight"
@@ -261,20 +364,20 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                         </button>
                     </div>
 
-                    {/* BLOCK 2: TOOL ARRAY - COMPACTED */}
+                    {/* BLOCK 2: TOOLS */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 relative z-20">
                         <ToolButton icon={FileText} label="UPLOAD JD" onClick={() => fileInputRef.current?.click()} />
                         <ToolButton icon={Briefcase} label="CASE STUDIES" onClick={() => onNavigateToProjects(null)} />
                         <ToolButton icon={Code} label="TECH STACK" onClick={() => {
-                            setResponse("My Stack: Python, TensorFlow, React, Gemini API, Pinecone, FastAPI, Docker, Kubernetes.");
+                            const msg = "My Stack: Python, TensorFlow, React, Gemini API, Pinecone, FastAPI, Docker, Kubernetes.";
+                            setResponse(msg);
+                            playAudioResponse(msg);
                         }} />
-
                         <ToolButton icon={Download} label="RESUME" onClick={() => window.open('/Satish_R_Singh_Group_Lead_Data_Scientist.pdf', '_blank')} className="text-power border-power" />
                     </div>
 
-                    {/* BLOCK 3: LOGIC CONSOLE - COMPACTED */}
+                    {/* BLOCK 3: CONSOLE */}
                     <div className="flex flex-col mt-2">
-                        {/* The Terminal */}
                         <div className="w-full h-[250px] bg-black p-4 overflow-hidden relative flex flex-col shadow-hard border-3 border-black">
                             {response ? (
                                 <div className="h-full flex flex-col animate-in fade-in duration-300">
@@ -283,23 +386,30 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                                             <div className="w-1.5 h-1.5 bg-power animate-pulse" />
                                             <span className="text-power font-mono text-[10px] uppercase tracking-widest">INCOMING_TRANSMISSION</span>
                                         </div>
-                                        <button onClick={() => setResponse(null)} className="text-[10px] font-mono font-bold text-gray-500 hover:text-white uppercase">[ CLEAR ]</button>
+                                        <div className="flex items-center gap-4">
+                                            {/* NEW SPEAKER BUTTON */}
+                                            <button
+                                                onClick={toggleAudio}
+                                                className={`flex items-center gap-1 text-[10px] font-mono font-bold uppercase transition-colors ${isAudioOn ? 'text-power animate-pulse' : 'text-gray-500 hover:text-white'}`}
+                                                title={isAudioOn ? "Mute Audio" : "Read Response"}
+                                            >
+                                                {isAudioOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+                                                <span>{isAudioOn ? 'READING...' : 'READ'}</span>
+                                            </button>
+                                            <button onClick={() => setResponse(null)} className="text-[10px] font-mono font-bold text-gray-500 hover:text-white uppercase">[ CLEAR ]</button>
+                                        </div>
                                     </div>
                                     <div className="flex-grow overflow-y-auto custom-scrollbar pr-2">
                                         <div className="font-mono text-sm leading-relaxed max-w-none text-gray-300">
-                                            <ReactMarkdown
-                                                components={{
-                                                    p: ({ node, ...props }) => <p className="mb-3 text-gray-300" {...props} />,
-                                                    strong: ({ node, ...props }) => <strong className="text-white font-bold" {...props} />,
-                                                    ul: ({ node, ...props }) => <ul className="list-disc pl-4 mb-3 text-gray-300" {...props} />,
-                                                    li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-                                                    h1: ({ node, ...props }) => <h1 className="text-lg font-bold text-white mb-2 uppercase" {...props} />,
-                                                    h2: ({ node, ...props }) => <h2 className="text-base font-bold text-white mb-2 uppercase" {...props} />,
-                                                    code: ({ node, ...props }) => <code className="bg-gray-800 px-1 rounded text-power" {...props} />
-                                                }}
-                                            >
-                                                {response}
-                                            </ReactMarkdown>
+                                            <ReactMarkdown components={{
+                                                p: ({ node, ...props }) => <p className="mb-3 text-gray-300" {...props} />,
+                                                strong: ({ node, ...props }) => <strong className="text-white font-bold" {...props} />,
+                                                ul: ({ node, ...props }) => <ul className="list-disc pl-4 mb-3 text-gray-300" {...props} />,
+                                                li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+                                                h1: ({ node, ...props }) => <h1 className="text-lg font-bold text-white mb-2 uppercase" {...props} />,
+                                                h2: ({ node, ...props }) => <h2 className="text-base font-bold text-white mb-2 uppercase" {...props} />,
+                                                code: ({ node, ...props }) => <code className="bg-gray-800 px-1 rounded text-power" {...props} />
+                                            }}>{response}</ReactMarkdown>
                                         </div>
                                     </div>
                                 </div>
@@ -312,7 +422,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                 </div>
             </div>
 
-            {/* RIGHT COLUMN (30%): The Profile - COMPACTED */}
+            {/* RIGHT COLUMN (30%) */}
             <div className="w-full lg:w-[30%] bg-white flex flex-col justify-start p-6 lg:p-10 border-b-3 md:border-b-0 border-black">
                 <div className="w-full mb-4">
                     <div className="inline-block bg-power text-white font-mono font-bold text-[10px] px-2 py-0.5 mb-2 border-2 border-black shadow-[2px_2px_0px_0px_#000000]">
@@ -342,7 +452,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
     );
 };
 
-// Compact ToolButton
 const ToolButton: React.FC<{ icon: any; label: string; onClick: () => void; className?: string }> = ({ icon: Icon, label, onClick, className = '' }) => (
     <button
         onClick={onClick}
