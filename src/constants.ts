@@ -99,8 +99,8 @@ export const EXPERIENCE = [
   {
     id: 1,
     year: "2022 - PRESENT",
-    role: "LEAD DATA SCIENTIST",
-    company: "ELDERBERRY GROUP",
+    role: "GROUP LEAD DATA SCIENTIST",
+    company: "E-CENTIVE & IGNITE",
     location: "ABU DHABI",
     metric: "Built the Data Science division from scratch. Deployed GenAI Voice Agents & RAG Knowledge Assistants, reducing Call Center TTR by 20%."
   },

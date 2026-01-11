@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { X, Code, Cpu, MessageSquare, FileText, ExternalLink, Shield } from 'lucide-react';
+import { X, FileText, Layers, Shield, Cpu, ExternalLink, Image as ImageIcon } from 'lucide-react';
 
-// Define the interface here (or import it if you have a types file)
 export interface Project {
     id: string;
     title: string;
@@ -9,7 +8,6 @@ export interface Project {
     image: string;
     techStack: string[];
     summary: string;
-    // Extended fields for the Modal
     challenge?: string;
     solution?: string;
     impact?: string;
@@ -22,7 +20,8 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose }) => {
-    const [activeTab, setActiveTab] = useState<'brief' | 'architecture' | 'code'>('brief');
+    // New Tab State: 'brief' or 'stack'
+    const [activeTab, setActiveTab] = useState<'brief' | 'stack'>('brief');
 
     if (!isOpen || !project) return null;
 
@@ -34,16 +33,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                 onClick={onClose}
             />
 
-            {/* The Dossier Card */}
+            {/* The Modal Card */}
             <div className="relative w-full max-w-4xl bg-white border-3 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-300">
 
-                {/* Header: "Classified" Style */}
+                {/* Header: Cleaned up, removed Confidential tag */}
                 <div className="flex items-center justify-between p-4 border-b-3 border-black bg-gray-100">
                     <div className="flex items-center gap-3">
-                        <div className="bg-power text-white font-mono text-xs font-bold px-2 py-1 uppercase tracking-widest">
-                            CONFIDENTIAL
-                        </div>
-                        <h2 className="font-black text-xl uppercase tracking-tighter">
+                        <h2 className="font-black text-xl uppercase tracking-tighter truncate max-w-[250px] md:max-w-md">
                             CASE_FILE: {project.title}
                         </h2>
                     </div>
@@ -58,26 +54,27 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                 {/* The Content Layout */}
                 <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
 
-                    {/* Sidebar: Metadata */}
+                    {/* Left Sidebar: Image & Domain Only */}
                     <div className="w-full md:w-1/3 bg-gray-50 border-b-3 md:border-b-0 md:border-r-3 border-black p-6 flex flex-col gap-6 overflow-y-auto">
-                        <div className="aspect-video w-full border-3 border-black grayscale">
-                            <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+
+                        {/* Image */}
+                        <div className="aspect-video w-full border-3 border-black grayscale bg-white flex items-center justify-center overflow-hidden relative">
+                            {project.image ? (
+                                <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="flex flex-col items-center justify-center text-gray-300">
+                                    <ImageIcon size={48} />
+                                    <span className="font-mono text-xs mt-2">NO_IMG_DATA</span>
+                                </div>
+                            )}
                         </div>
 
-                        <div>
-                            <h3 className="font-mono text-xs font-bold text-gray-500 uppercase mb-2">[ TECH_STACK ]</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {project.techStack.map(tech => (
-                                    <span key={tech} className="px-2 py-1 bg-white border-2 border-black font-mono text-xs font-bold">
-                                        {tech}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-
+                        {/* Domain Category */}
                         <div>
                             <h3 className="font-mono text-xs font-bold text-gray-500 uppercase mb-2">[ DOMAIN ]</h3>
-                            <span className="font-bold text-lg">{project.category}</span>
+                            <span className="font-bold text-lg bg-black text-white px-2 py-1">
+                                {project.category}
+                            </span>
                         </div>
                     </div>
 
@@ -85,7 +82,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                     <div className="w-full md:w-2/3 flex flex-col bg-white">
 
                         {/* Tabs */}
-                        <div className="flex border-b-3 border-black">
+                        <div className="flex border-b-3 border-black overflow-x-auto">
                             <TabButton
                                 active={activeTab === 'brief'}
                                 onClick={() => setActiveTab('brief')}
@@ -93,70 +90,62 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                                 label="MISSION BRIEF"
                             />
                             <TabButton
-                                active={activeTab === 'architecture'}
-                                onClick={() => setActiveTab('architecture')}
-                                icon={Cpu}
-                                label="SYSTEM ARCH"
-                            />
-                            <TabButton
-                                active={activeTab === 'code'}
-                                onClick={() => setActiveTab('code')}
-                                icon={Code}
-                                label="CODE"
+                                active={activeTab === 'stack'}
+                                onClick={() => setActiveTab('stack')}
+                                icon={Layers}
+                                label="TECH STACK"
                             />
                         </div>
 
                         {/* Tab Content */}
                         <div className="p-8 overflow-y-auto custom-scrollbar flex-grow">
+
+                            {/* TAB 1: MISSION BRIEF */}
                             {activeTab === 'brief' && (
-                                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                     <Section title="THE CHALLENGE" icon={Shield}>
-                                        <p className="text-gray-700 leading-relaxed font-medium">
-                                            {project.challenge || "Detailed problem statement loading... This section will describe the specific business pain points addressed by this solution."}
+                                        <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
+                                            {project.challenge || "Standard implementation challenge involving data scale and processing latency."}
                                         </p>
                                     </Section>
                                     <Section title="THE SOLUTION" icon={Cpu}>
-                                        <p className="text-gray-700 leading-relaxed font-medium">
-                                            {project.solution || "Solution architecture loading... This section explains the AI implementation strategy."}
+                                        <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
+                                            {project.solution || "Solution architecture deployed using the defined tech stack."}
                                         </p>
                                     </Section>
                                     <Section title="IMPACT & ROI" icon={ExternalLink}>
-                                        <p className="text-gray-700 leading-relaxed font-medium">
-                                            {project.impact || "Result metrics loading... This section highlights the quantifiable efficiency gains."}
+                                        <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
+                                            {project.impact || "Operational efficiency improvements and process automation."}
                                         </p>
                                     </Section>
                                 </div>
                             )}
 
-                            {activeTab === 'architecture' && (
-                                <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
-                                    <Cpu size={48} className="mb-4" />
-                                    <h3 className="font-black text-xl uppercase">Architecture Diagram</h3>
-                                    <p className="font-mono text-sm mt-2">Interact with the "Live Architecture" on the home page to see this in action.</p>
-                                </div>
-                            )}
+                            {/* TAB 2: TECH STACK */}
+                            {activeTab === 'stack' && (
+                                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                    <div className="mb-6">
+                                        <p className="font-mono text-sm text-gray-500 mb-4">
+                                            // TECHNOLOGIES DEPLOYED IN THIS UNIT
+                                        </p>
+                                        <div className="flex flex-wrap gap-3">
+                                            {project.techStack.map(tech => (
+                                                <div key={tech} className="flex items-center gap-2 px-3 py-2 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:shadow-none transition-all">
+                                                    <div className="w-2 h-2 bg-power rounded-full"></div>
+                                                    <span className="font-mono text-sm font-bold uppercase">{tech}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                            {activeTab === 'code' && (
-                                <div className="bg-gray-900 p-4 rounded-lg border-2 border-black text-green-400 font-mono text-sm overflow-x-auto">
-                                    <pre>{`# Example Implementation Logic
-def retrieve_context(query):
-    vector = embeddings.embed(query)
-    matches = pinecone.query(vector, top_k=3)
-    return format_context(matches)
-
-# Note: Full source code available upon request.`}</pre>
+                                    <div className="p-4 bg-gray-50 border-2 border-dashed border-gray-300 font-mono text-xs text-gray-500">
+                                        <p>dependency_check: passed</p>
+                                        <p>build_status: stable</p>
+                                        <p>integration: production_ready</p>
+                                    </div>
                                 </div>
                             )}
                         </div>
-
-                        {/* Footer Action */}
-                        <div className="p-4 border-t-3 border-black bg-gray-50 flex justify-end">
-                            <button className="flex items-center gap-2 font-black uppercase hover:text-power transition-colors">
-                                <MessageSquare size={18} />
-                                <span>Ask AI Agent about this project_</span>
-                            </button>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -164,10 +153,11 @@ def retrieve_context(query):
     );
 };
 
+// Helper Components
 const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
     <button
         onClick={onClick}
-        className={`flex-1 py-4 flex items-center justify-center gap-2 font-black text-sm uppercase tracking-tight transition-all
+        className={`flex-1 py-4 flex items-center justify-center gap-2 font-black text-xs md:text-sm uppercase tracking-tight transition-all min-w-[120px]
         ${active ? 'bg-power text-white' : 'bg-white text-black hover:bg-gray-100'}
         ${active ? '' : 'border-r-3 border-black last:border-r-0'}
         `}
@@ -179,7 +169,7 @@ const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
 
 const Section = ({ title, icon: Icon, children }: any) => (
     <div>
-        <div className="flex items-center gap-2 mb-2 text-power">
+        <div className="flex items-center gap-2 mb-3 text-power">
             <Icon size={18} />
             <h3 className="font-black text-sm uppercase tracking-widest">{title}</h3>
         </div>
