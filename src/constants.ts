@@ -68,32 +68,6 @@ export const ARCHIVE_PROJECTS = [
   }
 ];
 
-// export const EXPERIENCE: Experience[] = [
-//   {
-//     id: 'e1',
-//     year: '2023-PRES',
-//     role: 'Lead Data Scientist',
-//     company: 'TECH_CORP_GLOBAL',
-//     location: 'ABU DHABI',
-//     metric: 'Reduced inference cost by 40% via quantization.',
-//   },
-//   {
-//     id: 'e2',
-//     year: '2021-2023',
-//     role: 'Senior ML Engineer',
-//     company: 'STARTUP_XYZ',
-//     location: 'SAN FRANCISCO',
-//     metric: 'Deployed 15+ microservices handling 500 RPS.',
-//   },
-//   {
-//     id: 'e3',
-//     year: '2019-2021',
-//     role: 'Data Analyst',
-//     company: 'FINANCE_INC',
-//     location: 'NEW YORK',
-//     metric: 'Automated 200h/month of manual reporting.',
-//   },
-// ];
 
 export const EXPERIENCE = [
   {
@@ -130,10 +104,5 @@ export const EXPERIENCE = [
   }
 ];
 
-// export const SYSTEM_INSTRUCTION = `You are the AI Agent for Rohit Singh's portfolio.
-// You are a Lead Data Scientist based in Abu Dhabi.
-// Your persona is technical, direct, and efficient.
-// You specialize in RAG systems, AI Agents, and Scalable Data Architectures.
-// You are currently "Open to Work".
-// If asked about projects, mention the Enterprise RAG Engine or Autonomous Finance Agent.
-// Keep answers concise and structured. Use Markdown for formatting.`;
+
+export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";

@@ -70,7 +70,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
                 ${activeTab === 'stack' ? 'bg-power text-white' : 'bg-white text-black hover:bg-gray-100 border-r-3 border-black'}`}
           >
             <Layers size={18} />
-            TECH_STACK_INVENTORY
+            <span className="hidden md:inline">TECH_STACK_INVENTORY</span><span className="md:hidden">TECH_STACK</span>
           </button>
           <button
             onClick={() => setActiveTab('diagram')}
@@ -78,7 +78,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
                 ${activeTab === 'diagram' ? 'bg-power text-white' : 'bg-white text-black hover:bg-gray-100'}`}
           >
             <Map size={18} />
-            VISUAL_BLUEPRINT
+            <span className="hidden md:inline">VISUAL_BLUEPRINT</span><span className="md:hidden">BLUEPRINT</span>
           </button>
         </div>
 

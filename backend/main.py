@@ -72,9 +72,16 @@ except FileNotFoundError:
 # ---------------------------------------------------------
 app = FastAPI(title="Rohit Portfolio API")
 
+# 1. FIX CORS
+origins = [
+    "http://localhost:3000",           # Vite Localhost
+    "https://your-project.pages.dev",  # Your Cloudflare Domain (Add this later)
+    "https://satish-portfolio-1at.pages.dev" # Example - Remove this later
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -127,15 +134,33 @@ async def chat_endpoint(request: ChatRequest):
 
 @app.post("/analyze_jd")
 async def analyze_jd(file: UploadFile = File(...)):
+    # FILE SIZE CHECK (Limit to 5MB)
+    MAX_FILE_SIZE = 5 * 1024 * 1024
+
+    # Check content-length header first (fast)
+    if file.size > MAX_FILE_SIZE:
+        return {"response": "⚠️ File too large. Max 5MB allowed."}
     try:
         content = await file.read()
-        pdf_reader = PdfReader(io.BytesIO(content))
-        jd_text = "".join([page.extract_text() for page in pdf_reader.pages])[:30000]
+        
+        # Double check actual size after reading
+        if len(content) > MAX_FILE_SIZE:
+             return {"response": "⚠️ File too large. Max 5MB allowed."}
+        
+        # RUN BLOCKING PDF PARSING IN THREAD POOL
+        def parse_pdf(file_bytes):
+            reader = PdfReader(io.BytesIO(file_bytes))
+            # Extract text safely
+            return "".join([page.extract_text() or "" for page in reader.pages])[:30000]
+
+        # This prevents the server from freezing while reading PDF
+        jd_text = await run_in_executor(None, parse_pdf, content)
+        
         prompt = get_jd_analysis_prompt(jd_text, RESUME_CONTEXT)
-        response = llm.invoke(prompt)
+        response = await llm.ainvoke(prompt) # Use async invoke if available, otherwise standard invoke is okay in thread
         return {"response": response.content}
     except Exception as e:
-        return {"response": "Error reading PDF."}
+        return {"response": "Error reading PDF. Ensure it is a valid text-based PDF."}
 
 # ---------------------------------------------------------
 # TTS ENDPOINT (Gemini 2.5 Flash Preview)
@@ -183,7 +208,7 @@ async def text_to_speech(request: TTSRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 
 
 

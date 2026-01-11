@@ -3,6 +3,7 @@ import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, V
 import { TechStackModal } from './TechStackModal';
 import { TrustMarquee } from './TrustMarquee';
 import ReactMarkdown from 'react-markdown';
+import { API_URL } from '../constants';
 
 type SystemState = 'IDLE' | 'PROCESSING' | 'SPEAKING' | 'LISTENING';
 
@@ -106,7 +107,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
         setSystemState('SPEAKING');
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
             const res = await fetch(`${API_URL}/tts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -307,7 +307,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                         </div>
 
                         {/* 3. THE CONSOLE WINDOW - HEIGHT REDUCED TO 300px */}
-                        <div className="flex flex-col mt-4 shadow-hard border-3 border-black bg-black h-[300px] relative">
+                        <div className="flex flex-col mt-4 shadow-hard border-3 border-black bg-black h-[220px] md:h-[300px] relative">
 
                             {/* CONSOLE HEADER */}
                             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-gray-900/50">

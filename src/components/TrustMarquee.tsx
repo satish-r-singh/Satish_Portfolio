@@ -1,36 +1,55 @@
 import React from 'react';
-
-const LOGOS = [
-  "EMIRATES INSTITUTE OF FINANCE",
-  "MINDWORX",
-  "SIMPLILEARN",
-  "VINSYS",
-  "THE KNOWLEDGE ACADEMY",
-  "SPRINGER NATURE"
-];
+import { BookOpen, Users, Terminal } from 'lucide-react';
 
 export const TrustMarquee: React.FC = () => {
   return (
-    <div className="w-full bg-white border-3 border-black mt-4 flex flex-col md:flex-row shadow-hard relative overflow-hidden h-16 md:h-14">
-      {/* Label Badge */}
-      <div className="bg-black text-white px-4 flex items-center justify-center md:justify-start font-mono text-[10px] md:text-xs font-bold uppercase shrink-0 z-20 h-6 md:h-full w-full md:w-auto">
-        {'>'} KNOWLEDGE_TRANSFER_NODES:
-      </div>
-      
-      {/* Marquee Container */}
-      <div className="flex-grow overflow-hidden flex items-center bg-white relative h-full w-full">
-         <div className="animate-marquee whitespace-nowrap flex items-center h-full">
-            {/* Repeat content enough times to ensure smooth loop */}
-            {[...Array(4)].map((_, i) => (
-                <div key={i} className="flex items-center">
-                    {LOGOS.map((logo, idx) => (
-                        <div key={`${i}-${idx}`} className="mx-8 font-black text-xl md:text-2xl text-gray-400 uppercase tracking-tighter hover:text-black transition-colors cursor-default select-none whitespace-nowrap">
-                            {logo}
-                        </div>
-                    ))}
-                </div>
+    <div className="w-full bg-white border-b-3 border-black py-8 px-6 md:px-12">
+
+      <div className="flex flex-col md:flex-row gap-8 md:gap-16">
+
+        {/* LEFT COL: RESEARCH & MENTORSHIP (High Value) */}
+        <div className="md:w-1/3 flex flex-col gap-4">
+          <div className="flex items-center gap-2 mb-2 border-b-2 border-black pb-2">
+            <BookOpen size={16} />
+            <h3 className="font-black text-sm uppercase tracking-wider">Research & Mentorship</h3>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="group">
+              <span className="font-mono text-xs text-gray-500 block mb-0.5">// PUBLISHER</span>
+              <span className="font-bold text-lg uppercase leading-tight group-hover:text-power transition-colors">Springer Nature</span>
+            </div>
+            <div className="group">
+              <span className="font-mono text-xs text-gray-500 block mb-0.5">// MENTORSHIP</span>
+              <span className="font-bold text-lg uppercase leading-tight group-hover:text-power transition-colors">Mindworx</span>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COL: CORPORATE TRAINING (Volume) */}
+        <div className="md:w-2/3 flex flex-col gap-4">
+          <div className="flex items-center gap-2 mb-2 border-b-2 border-black pb-2">
+            <Users size={16} />
+            <h3 className="font-black text-sm uppercase tracking-wider">Corporate Training Delivery</h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
+            {[
+              "Emirates Institute of Finance",
+              "SimpliLearn",
+              "Vinsys",
+              "The Knowledge Academy"
+            ].map((partner, idx) => (
+              <div key={idx} className="flex items-center gap-2 group">
+                <Terminal size={12} className="text-gray-400 group-hover:text-power" />
+                <span className="font-mono text-sm font-bold uppercase text-gray-700 group-hover:text-black">
+                  {partner}
+                </span>
+              </div>
             ))}
-         </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
