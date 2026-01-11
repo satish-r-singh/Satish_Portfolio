@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers, Trash2 } from 'lucide-react';
+import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers, Trash2, Copy, Check } from 'lucide-react';
 import { TechStackModal } from './TechStackModal';
 import { TrustMarquee } from './TrustMarquee';
 import ReactMarkdown from 'react-markdown';
@@ -309,7 +309,55 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                         {/* 3. THE CONSOLE WINDOW - HEIGHT REDUCED TO 300px */}
                         <div className="flex flex-col mt-4 shadow-hard border-3 border-black bg-black h-[220px] md:h-[300px] relative">
 
-                            {/* CONSOLE HEADER */}
+                            {/* TERMINAL HEADER - RESPONSIVE & FIXED */}
+                            <div className="flex items-center justify-between px-3 py-2 bg-gray-900 border-b border-gray-800 shrink-0">
+
+                                {/* LEFT: Status (Uses your existing 'systemState') */}
+                                <div className="flex items-center gap-2">
+                                    <div className={`w-2 h-2 rounded-full ${systemState === 'IDLE' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></div>
+                                    <span className="font-mono text-[10px] md:text-xs text-gray-400 font-bold uppercase">
+                                        <span className="hidden md:inline">SYSTEM_STATUS: </span>
+                                        {systemState}
+                                    </span>
+                                </div>
+
+                                {/* RIGHT: Controls */}
+                                <div className="flex items-center gap-3">
+
+                                    {/* Audio Toggle (Uses your existing 'toggleAudio' and 'isAudioOn') */}
+                                    <button
+                                        onClick={toggleAudio}
+                                        className={`flex items-center gap-1.5 transition-colors ${isAudioOn ? 'text-power' : 'text-gray-500 hover:text-white'}`}
+                                        title="Toggle Sound"
+                                    >
+                                        {isAudioOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+                                        <span className="hidden md:inline font-mono text-[10px] font-bold">
+                                            {isAudioOn ? 'AUDIO_ON' : 'MUTED'}
+                                        </span>
+                                    </button>
+
+                                    {/* Clear Button (Uses your existing 'handleClear') */}
+                                    <button
+                                        onClick={handleClear}
+                                        className="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1.5"
+                                        title="Clear Terminal"
+                                    >
+                                        <Trash2 size={14} />
+                                        <span className="hidden md:inline font-mono text-[10px] font-bold">
+                                            [ CLEAR ]
+                                        </span>
+                                    </button>
+
+                                    {/* Decorative Dots */}
+                                    <div className="flex gap-1.5 ml-1 border-l border-gray-700 pl-3">
+                                        <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                                        <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                                        <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {/* CONSOLE HEADER
                             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-gray-900/50">
                                 <div className="flex items-center gap-3">
                                     <div className={`w-2 h-2 rounded-full ${systemState === 'IDLE' ? 'bg-green-500' : 'bg-power animate-pulse'}`}></div>
@@ -341,7 +389,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                                         <div className="w-2 h-2 rounded-full bg-green-500"></div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* SCROLL AREA */}
                             <div
