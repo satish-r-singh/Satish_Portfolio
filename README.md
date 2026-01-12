@@ -9,7 +9,7 @@
 ### 🟢 [ ACCESS_LIVE_TERMINAL ](https://satish-portfolio-1at.pages.dev/)
 *(Click above to interact with the live AI Agent)*
 
-![Portfolio Interface](./public/portfolio_screenshot.png)
+![Portfolio Interface](./public/images/portfolio_screenshot.png)
 
 ---
 
