@@ -7,7 +7,7 @@ export const Header: React.FC<HeaderProps> = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { label: '[ABOUT]', id: 'hero' },
+    { label: '[ABOUT]', id: 'about' },
     { label: '[PROJECTS]', id: 'projects' },
     { label: '[EXPERIENCE]', id: 'experience' },
     { label: '[SKILLS]', id: 'skills' },
