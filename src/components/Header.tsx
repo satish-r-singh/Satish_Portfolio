@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// REMOVED: Audio props are no longer needed here
 interface HeaderProps { }
 
 export const Header: React.FC<HeaderProps> = () => {
@@ -8,7 +7,7 @@ export const Header: React.FC<HeaderProps> = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { label: '[ABOUT]', id: 'about' },
+    { label: '[ABOUT]', id: 'hero' },
     { label: '[PROJECTS]', id: 'projects' },
     { label: '[EXPERIENCE]', id: 'experience' },
     { label: '[SKILLS]', id: 'skills' },
@@ -25,17 +24,17 @@ export const Header: React.FC<HeaderProps> = () => {
 
   return (
     <>
-      {/* Fixed height h-14 (56px) */}
-      <header className="sticky top-0 z-50 w-full bg-white border-b-3 border-black flex h-14 relative">
+      {/* --- THE MAIN HEADER BAR (High Z-Index) --- */}
+      <header className="sticky top-0 z-[999] w-full bg-white border-b-3 border-black flex h-14 relative">
 
-        {/* 1. LOGO SECTION - Left aligned (Grows to fill space) */}
+        {/* 1. LOGO SECTION */}
         <div className="flex-grow flex items-center px-4 lg:px-6 border-r-3 border-black bg-white z-20">
           <span className="font-black text-lg md:text-xl tracking-tighter uppercase">
             SATISH_ROHIT_SINGH<span className="animate-blink-bw">_</span>
           </span>
         </div>
 
-        {/* 2. NAVIGATION - Right aligned (Desktop) */}
+        {/* 2. NAVIGATION (Desktop) */}
         <nav className="hidden lg:flex h-full">
           {navItems.map((item) => (
             <button
@@ -60,9 +59,9 @@ export const Header: React.FC<HeaderProps> = () => {
 
       </header>
 
-      {/* 4. MOBILE DROPDOWN (Conditional Render) */}
+      {/* --- MOBILE DROPDOWN (Maximum Z-Index) --- */}
       {isMenuOpen && (
-        <div className="fixed top-14 left-0 w-full bg-white border-b-3 border-black shadow-[0_10px_20px_rgba(0,0,0,0.2)] z-100 lg:hidden animate-in slide-in-from-top-2 duration-200">
+        <div className="fixed top-14 left-0 w-full bg-white border-b-3 border-black shadow-[0_10px_20px_rgba(0,0,0,0.5)] z-[9999] lg:hidden animate-in slide-in-from-top-2 duration-200">
           <div className="flex flex-col">
             {navItems.map((item) => (
               <button
