@@ -357,39 +357,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
 
                                 </div>
                             </div>
-                            {/* CONSOLE HEADER
-                            <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-gray-900/50">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-2 h-2 rounded-full ${systemState === 'IDLE' ? 'bg-green-500' : 'bg-power animate-pulse'}`}></div>
-                                    <span className="font-mono text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                        SYSTEM_STATUS: {systemState}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <button
-                                        onClick={toggleAudio}
-                                        className={`flex items-center gap-2 text-[10px] font-mono font-bold uppercase transition-all
-                                        ${isAudioOn ? 'text-power' : 'text-gray-600 hover:text-white'}`}
-                                    >
-                                        {isAudioOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
-                                        <span>{isAudioOn ? 'MUTED' : 'MUTED'}</span>
-                                    </button>
-
-                                    <button
-                                        onClick={handleClear}
-                                        className="flex items-center gap-2 text-[10px] font-mono font-bold uppercase text-gray-600 hover:text-white transition-all"
-                                    >
-                                        <Trash2 size={14} />
-                                        <span>[ CLEAR ]</span>
-                                    </button>
-
-                                    <div className="flex gap-2 border-l border-gray-800 pl-4">
-                                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                        <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                    </div>
-                                </div>
-                            </div> */}
 
                             {/* SCROLL AREA */}
                             <div

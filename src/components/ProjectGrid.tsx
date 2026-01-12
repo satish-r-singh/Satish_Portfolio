@@ -222,9 +222,6 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter">
             DEPLOYED_UNITS
           </h2>
-          <span className="font-mono font-bold text-sm md:text-lg bg-black text-white px-3 py-1">
-            [COUNT: {totalCount}]
-          </span>
         </div>
 
         {/* Grid Render */}

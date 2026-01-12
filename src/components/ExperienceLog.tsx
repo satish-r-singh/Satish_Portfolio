@@ -29,11 +29,11 @@ export const ExperienceLog: React.FC = () => {
                   <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5">
 
                     {/* Header */}
-                    <div className="flex items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
-                      <span className="text-black">📄 PUBLISHED_RESEARCH</span>
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
+                      <span className="text-black whitespace-nowrap">📄 PUBLISHED_RESEARCH</span>
                       <span className="text-gray-400">//</span>
                       {/* Highlighted Springer Nature */}
-                      <span className="bg-power text-white px-1">SPRINGER_NATURE</span>
+                      <span className="bg-power text-white px-1 whitespace-nowrap">SPRINGER_NATURE</span>
                     </div>
 
                     {/* Main Content */}
