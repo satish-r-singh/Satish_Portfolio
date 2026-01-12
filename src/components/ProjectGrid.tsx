@@ -293,7 +293,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                 <div className="col-span-1 text-right">ACTION</div>
               </div>
 
-              <div className="flex flex-col divide-y-2 divide-gray-100">
+              {/* <div className="flex flex-col divide-y-2 divide-gray-100">
                 {listProjects.map((project) => (
                   <div
                     key={project.id}
@@ -318,6 +318,43 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                         <ArrowUpRight size={16} className="text-gray-300 group-hover:text-black" />
                       </div>
                     </div>
+                  </div>
+                ))}
+              </div> */}
+
+              <div className="flex flex-col divide-y-2 divide-gray-100">
+                {listProjects.map((project) => (
+                  <div
+                    key={project.id}
+                    onClick={() => setSelectedProject(project)}
+                    className="group relative grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 px-6 hover:bg-yellow-50 transition-colors items-start md:items-center cursor-pointer"
+                  >
+                    {/* DATE */}
+                    <div className="col-span-2 font-mono text-xs font-bold text-gray-400 md:text-gray-500 mb-1 md:mb-0">
+                      2023
+                    </div>
+
+                    {/* TITLE (Added padding-right on mobile so text doesn't hit the arrow) */}
+                    <div className="col-span-4 font-black text-sm uppercase text-black group-hover:text-power transition-colors truncate pr-8 md:pr-0">
+                      {project.title}
+                    </div>
+
+                    {/* TECH STACK */}
+                    <div className="col-span-5 flex flex-wrap gap-2 mt-2 md:mt-0">
+                      {project.techStack.slice(0, 4).map((tag: string) => (
+                        <span key={tag} className="text-[10px] font-mono border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-gray-600 group-hover:border-black group-hover:bg-white transition-colors uppercase">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* ARROW: Absolute Top-Right on Mobile, Grid Column on Desktop */}
+                    <div className="absolute top-4 right-4 md:static md:col-span-1 md:flex md:justify-end">
+                      <div className="p-1 border border-transparent group-hover:border-black group-hover:bg-white rounded-none transition-all">
+                        <ArrowUpRight size={18} className="text-gray-300 group-hover:text-black md:w-5 md:h-5" />
+                      </div>
+                    </div>
+
                   </div>
                 ))}
               </div>
