@@ -267,7 +267,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                         </p>
                     </div>
 
-                    <div className="w-full max-w-5xl flex flex-col gap-4">
+                    <div className="w-full flex flex-col gap-4 pr-0 lg:pr-8">
 
                         {/* 1. INPUT ROW - HEIGHT REDUCED TO h-12 */}
                         <div className="flex relative z-30 shadow-hard w-full h-12">
