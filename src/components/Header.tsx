@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = () => {
 
       {/* 4. MOBILE DROPDOWN (Conditional Render) */}
       {isMenuOpen && (
-        <div className="fixed top-14 left-0 w-full bg-white border-b-3 border-black shadow-[0_10px_20px_rgba(0,0,0,0.2)] z-40 lg:hidden animate-in slide-in-from-top-2 duration-200">
+        <div className="fixed top-14 left-0 w-full bg-white border-b-3 border-black shadow-[0_10px_20px_rgba(0,0,0,0.2)] z-100 lg:hidden animate-in slide-in-from-top-2 duration-200">
           <div className="flex flex-col">
             {navItems.map((item) => (
               <button
