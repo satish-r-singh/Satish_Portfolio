@@ -64,23 +64,23 @@ export const SkillsMatrix: React.FC = () => {
     <section id="skills" className="w-full pt-12 pb-24 bg-white border-b-3 border-black">
       <SectionDivider title="[ SYSTEM_SPECIFICATIONS ]" />
 
-      {/* VIEW TOGGLE CONTROLS */}
-      <div className="max-w-6xl mx-auto px-6 mt-8 flex flex-wrap justify-end gap-2">
+      {/* VIEW TOGGLE CONTROLS - Responsive Fix */}
+      <div className="max-w-6xl mx-auto px-6 mt-8 flex flex-wrap justify-center md:justify-end gap-2">
         <button
           onClick={() => setActiveView('list')}
-          className={`px-4 py-2 font-mono text-xs font-bold border-2 border-black flex items-center gap-2 transition-all ${activeView === 'list' ? 'bg-black text-white' : 'bg-white hover:bg-gray-100'}`}
+          className={`flex-1 md:flex-none px-4 py-3 md:py-2 font-mono text-xs font-bold border-2 border-black flex items-center justify-center gap-2 transition-all min-w-[120px] ${activeView === 'list' ? 'bg-black text-white' : 'bg-white hover:bg-gray-100'}`}
         >
           <Info size={14} /> LIST_VIEW
         </button>
         <button
           onClick={() => setActiveView('radar')}
-          className={`px-4 py-2 font-mono text-xs font-bold border-2 border-black flex items-center gap-2 transition-all ${activeView === 'radar' ? 'bg-black text-white' : 'bg-white hover:bg-gray-100'}`}
+          className={`flex-1 md:flex-none px-4 py-3 md:py-2 font-mono text-xs font-bold border-2 border-black flex items-center justify-center gap-2 transition-all min-w-[120px] ${activeView === 'radar' ? 'bg-black text-white' : 'bg-white hover:bg-gray-100'}`}
         >
           <Radar size={14} /> RADAR_HUD
         </button>
         <button
           onClick={() => setActiveView('network')}
-          className={`px-4 py-2 font-mono text-xs font-bold border-2 border-black flex items-center gap-2 transition-all ${activeView === 'network' ? 'bg-black text-white' : 'bg-white hover:bg-gray-100'}`}
+          className={`flex-1 md:flex-none px-4 py-3 md:py-2 font-mono text-xs font-bold border-2 border-black flex items-center justify-center gap-2 transition-all min-w-[120px] ${activeView === 'network' ? 'bg-black text-white' : 'bg-white hover:bg-gray-100'}`}
         >
           <Share2 size={14} /> TOPOLOGY
         </button>
