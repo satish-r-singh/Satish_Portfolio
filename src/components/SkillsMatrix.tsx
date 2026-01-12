@@ -1,6 +1,8 @@
+
+
 import React, { useState } from 'react';
 import { SectionDivider } from './SectionDivider';
-import { Terminal, Cpu, Database, Cloud, Users, Radar, Share2, Info, Server, Layers } from 'lucide-react';
+import { Terminal, Cpu, Database, Cloud, Layout, Users, Radar, Share2, Info } from 'lucide-react';
 
 // --- TYPES & DATA ---
 interface Spec {
@@ -21,38 +23,38 @@ export const SkillsMatrix: React.FC = () => {
       icon: Terminal,
       status: "PRIMARY FOCUS",
       score: 98,
-      tools: ["RAG Pipelines", "LangChain", "CrewAI", "Vector DBs", "Gemini API"],
+      tools: ["RAG Pipelines", "LangChain", "Vector DBs", "Gemini API", "Agents"],
       details: "Architecting autonomous reasoning systems and high-accuracy retrieval engines."
     },
     {
       category: "DATA SCIENCE",
-      icon: Layers,
+      icon: Database,
       status: "15 YEARS EXP",
-      score: 95,
-      tools: ["Python", "XGBoost", "PyTorch", "Scikit-Learn", "Computer Vision"],
+      score: 90,
+      tools: ["Python", "XGBoost", "Pandas", "Scikit-Learn", "Computer Vision", "SQL"],
       details: "Building predictive models for pricing, fraud detection, and demand forecasting."
     },
     {
-      category: "CLOUD & MLOps",
+      category: "CLOUD ENGINEERING",
       icon: Cloud,
       status: "PRODUCTION READY",
-      score: 90,
-      tools: ["AWS", "Azure", "Docker", "Kubernetes", "MLflow", "CI/CD"],
+      score: 85,
+      tools: ["Azure", "Docker", "Kubernetes", "FastAPI", "Postgres", "CI/CD"],
       details: "Full-cycle MLOps: From local notebooks to scalable cloud deployments."
     },
     {
-      category: "BIG DATA & ENGINEERING",
-      icon: Server,
-      status: "SCALABLE ARCH",
-      score: 85,
-      tools: ["Apache Spark", "Kafka", "Hadoop", "SQL", "ETL Pipelines"],
-      details: "Processing large-scale datasets and architecting real-time data ingestion pipelines."
+      category: "FULL STACK WEB",
+      icon: Layout,
+      status: "INTERFACE",
+      score: 75,
+      tools: ["React", "TypeScript", "Tailwind", "Streamlit", "Node.js"],
+      details: "Building interactive front-ends to make AI accessible to non-technical users."
     },
     {
       category: "LEADERSHIP",
       icon: Users,
       status: "MANAGEMENT",
-      score: 88,
+      score: 80,
       tools: ["Team Building", "Strategy", "Roadmapping", "Mentoring", "Agile"],
       details: "Leading data teams and aligning technical execution with business revenue goals."
     }
@@ -89,8 +91,8 @@ export const SkillsMatrix: React.FC = () => {
         {/* --- VIEW 1: THE LIST (Original) --- */}
         {activeView === 'list' && (
           <div className="border-3 border-black bg-white shadow-hard animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="bg-black text-white p-4 flex justify-between items-center border-b-3 border-black">
-              <h3 className="font-mono text-xl font-bold uppercase tracking-widest">
+            <div className="bg-black text-white p-3 md:p-4 flex items-center justify-between border-b-3 border-black gap-2">
+              <h3 className="font-mono text-sm md:text-xl font-bold uppercase tracking-widest truncate">
                 // TECHNICAL_INVENTORY
               </h3>
               <div className="flex gap-2">
@@ -258,6 +260,7 @@ const NetworkGraph = ({ specs }: { specs: Spec[] }) => {
 
   // Config
   const orbitRadiusCategory = 140;
+  const orbitRadiusTools = 60; // Distance from category
 
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`}>

@@ -46,13 +46,13 @@ export const Footer: React.FC = () => {
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 relative z-10">
 
         {/* --- HEADER --- */}
-        <div className="mb-20 text-center">
-          <h2 className="text-4xl md:text-6xl lg:text-8xl font-black uppercase tracking-tighter mb-6 leading-none text-white glitch-effect">
+        <div className="mb-12 md:mb-20 text-center">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-black uppercase tracking-tighter mb-4 md:mb-6 leading-none text-white glitch-effect break-words">
             CONNECTION_TERMINATED
           </h2>
-          <div className="inline-flex items-center gap-3 px-4 py-2 border border-white/30 bg-white/5">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <p className="font-mono text-sm md:text-base text-gray-300 tracking-widest">
+          <div className="inline-flex flex-col md:flex-row items-center gap-2 md:gap-3 px-3 py-2 border border-white/30 bg-white/5 max-w-full">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse shrink-0"></span>
+            <p className="font-mono text-[10px] sm:text-xs md:text-base text-gray-300 tracking-widest text-center break-all md:break-normal">
               // INITIATE_HUMAN_HANDSHAKE_PROTOCOL
             </p>
           </div>
@@ -105,11 +105,11 @@ export const Footer: React.FC = () => {
         <div className="flex justify-center mb-16">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="group relative px-8 py-5 border-4 border-white bg-black hover:bg-white hover:text-black transition-all duration-300"
+            className="group relative px-6 py-4 md:px-8 md:py-5 border-4 border-white bg-black hover:bg-white hover:text-black transition-all duration-300 w-full md:w-auto max-w-xs md:max-w-none"
           >
             <div className="flex items-center gap-4">
-              <ArrowUp size={32} className="group-hover:-translate-y-2 transition-transform duration-300" />
-              <span className="font-black text-xl md:text-3xl tracking-tighter uppercase">
+              <ArrowUp size={24} className="md:w-8 md:h-8 group-hover:-translate-y-2 transition-transform duration-300" />
+              <span className="font-black text-sm md:text-3xl tracking-tighter uppercase leading-tight">
                 [ RERUN_SYSTEM_INITIALIZATION ]
               </span>
             </div>
