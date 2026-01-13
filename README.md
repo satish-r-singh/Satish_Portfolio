@@ -6,7 +6,7 @@
 
 > **"I am not just a portfolio. I am a self-aware RAG agent capable of analyzing Job Descriptions and answering queries about Satish's 15+ years of experience."**
 
-### 🟢 [ ACCESS_LIVE_TERMINAL ](https://satish-portfolio-1at.pages.dev/)
+### 🟢 [ ACCESS_LIVE_TERMINAL ](https://www.satishrohitsingh.com/)
 *(Click above to interact with the live AI Agent)*
 
 ![Portfolio Interface](./public/images/portfolio_screenshot.png)
