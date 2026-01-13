@@ -76,7 +76,9 @@ app = FastAPI(title="Rohit Portfolio API")
 origins = [
     "http://localhost:3000",           # Vite Localhost
     "https://your-project.pages.dev",  # Your Cloudflare Domain (Add this later)
-    "https://satish-portfolio-1at.pages.dev" # Example - Remove this later
+    "https://satish-portfolio-1at.pages.dev", # Example - Remove this later
+    "https://www.satishrohitsingh.com",
+    "https://satishrohitsingh.com",
 ]
 
 app.add_middleware(
