@@ -150,7 +150,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
             addLog(`> TOOL_SELECTED: ${tool}_PROTOCOL`);
         }, 500);
 
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
         try {
             if (tool === 'JD_MATCHER') addLog('> PARSING_CONTEXT_WINDOW...');
 
@@ -192,7 +191,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
 
         const formData = new FormData();
         formData.append("file", file);
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
         try {
             const res = await fetch(`${API_URL}/analyze_jd`, { method: "POST", body: formData });

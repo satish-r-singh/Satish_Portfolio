@@ -1,12 +1,18 @@
 import os
 import uvicorn
 import logging
+from asyncio import get_running_loop
 from dotenv import load_dotenv
 
 # --- FASTAPI IMPORTS ---
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+# --- RATE LIMITING ---
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 # --- PDF READING ---
 from pypdf import PdfReader
@@ -72,6 +78,11 @@ except FileNotFoundError:
 # ---------------------------------------------------------
 app = FastAPI(title="Rohit Portfolio API")
 
+# Rate Limiter Setup
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # 1. FIX CORS
 origins = [
     "http://localhost:3000",           # Vite Localhost
@@ -85,8 +96,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 class ChatRequest(BaseModel):
@@ -95,6 +106,15 @@ class ChatRequest(BaseModel):
 
 class TTSRequest(BaseModel):
     text: str
+
+# Security Headers Middleware
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 # Helper: Wave File Generator (From Cookbook)
 import wave
@@ -117,9 +137,16 @@ def generate_wav_bytes(pcm_data, channels=1, rate=24000, sample_width=2):
 # ---------------------------------------------------------
 
 @app.post("/chat")
-async def chat_endpoint(request: ChatRequest):
+@limiter.limit("15/minute")
+async def chat_endpoint(request: Request, chat_request: ChatRequest):
     try:
-        user_msg = request.message
+        # Input validation
+        if not chat_request.message or len(chat_request.message.strip()) == 0:
+            return {"response": "⚠️ Please enter a message."}
+        if len(chat_request.message) > 2000:
+            return {"response": "⚠️ Message too long. Please keep it under 2000 characters."}
+        
+        user_msg = chat_request.message.strip()
         # Simple RAG Logic
         vector = embeddings.embed_query(user_msg)
         results = index.query(vector=vector, top_k=3, include_metadata=True)
@@ -132,15 +159,21 @@ async def chat_endpoint(request: ChatRequest):
         return {"response": ai_response.content, "action": "reply"}
 
     except Exception as e:
-        return {"response": "⚠️ System Error.", "error": str(e)}
+        logger.error(f"Chat error: {str(e)}")
+        return {"response": "⚠️ System Error. Please try again later."}
 
 @app.post("/analyze_jd")
-async def analyze_jd(file: UploadFile = File(...)):
+@limiter.limit("10/minute")
+async def analyze_jd(request: Request, file: UploadFile = File(...)):
     # FILE SIZE CHECK (Limit to 5MB)
     MAX_FILE_SIZE = 5 * 1024 * 1024
 
+    # Validate file type
+    if file.content_type != "application/pdf":
+        return {"response": "⚠️ Only PDF files are accepted."}
+    
     # Check content-length header first (fast)
-    if file.size > MAX_FILE_SIZE:
+    if file.size and file.size > MAX_FILE_SIZE:
         return {"response": "⚠️ File too large. Max 5MB allowed."}
     try:
         content = await file.read()
@@ -156,7 +189,8 @@ async def analyze_jd(file: UploadFile = File(...)):
             return "".join([page.extract_text() or "" for page in reader.pages])[:30000]
 
         # This prevents the server from freezing while reading PDF
-        jd_text = await run_in_executor(None, parse_pdf, content)
+        loop = get_running_loop()
+        jd_text = await loop.run_in_executor(None, parse_pdf, content)
         
         prompt = get_jd_analysis_prompt(jd_text, RESUME_CONTEXT)
         response = await llm.ainvoke(prompt) # Use async invoke if available, otherwise standard invoke is okay in thread
@@ -168,14 +202,15 @@ async def analyze_jd(file: UploadFile = File(...)):
 # TTS ENDPOINT (Gemini 2.5 Flash Preview)
 # ---------------------------------------------------------
 @app.post("/tts")
-async def text_to_speech(request: TTSRequest):
-    logger.info(f"🎤 TTS Request (Gemini 2.5): {request.text[:30]}...")
+@limiter.limit("20/minute")
+async def text_to_speech(request: Request, tts_request: TTSRequest):
+    logger.info(f"🎤 TTS Request (Gemini 2.5): {tts_request.text[:30]}...")
     
     try:
         # 1. Generate Content (Following Cookbook pattern)
         response = client.models.generate_content(
             model='gemini-2.5-flash-preview-tts',
-            contents=request.text,
+            contents=tts_request.text,
             config=types.GenerateContentConfig(
                 response_modalities=['AUDIO'],
                 speech_config=types.SpeechConfig(
