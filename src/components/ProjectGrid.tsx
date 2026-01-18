@@ -11,6 +11,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'portfolio-agent',
     title: 'AI_PORTFOLIO_AGENT',
+    year: '2026',
     category: 'Agents',
     image: '/images/Project_1.avif',
     techStack: ['AGENTS', 'RAG', 'REACT', 'GEMINI 2.5'],
@@ -23,6 +24,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'knowledge-bot',
     title: 'ENTERPRISE_KNOWLEDGE_BOT',
+    year: '2025',
     category: 'RAG',
     image: '/images/Project_2.avif',
     techStack: ['RAG', 'DATA_ENG', 'LANGCHAIN', 'PINEONE'],
@@ -35,6 +37,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'vision-damage',
     title: 'VISION_DAMAGE_ESTIMATOR',
+    year: '2021',
     category: 'ML Ops',
     image: '/images/Project_3.avif',
     techStack: ['COMPUTER VISION', 'YOLO', 'AZURE', 'CNN'],
@@ -47,6 +50,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'predictive-pricing',
     title: 'PREDICTIVE_PRICING_CORE',
+    year: '2020',
     category: 'Data Eng',
     image: '/images/Project_4.avif',
     techStack: ['XGBOOST', 'SCIKIT-LEARN', 'PYTHON'],
@@ -59,6 +63,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'genai-content',
     title: 'GENAI_LEARNING_ECOSYSTEM',
+    year: '2025',
     category: 'RAG',
     image: '/images/Project_5.jpg',
     techStack: ['GENAI', 'MULTI-MODAL', 'FFMPEG', 'OPENAI'],
@@ -71,6 +76,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'fraud-shield',
     title: 'INSURANCE_FRAUD_SHIELD',
+    year: '2020',
     category: 'ML Ops',
     image: '/images/Project_6.jpg',
     techStack: ['ANOMALY DETECTION', 'AWS', 'SKLEARN'],
@@ -84,6 +90,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'retail-clusters',
     title: 'RETAIL_SEGMENTATION_CLUSTERS',
+    year: '2023',
     category: 'Data Eng',
     image: '/images/Project_7.jpg',
     techStack: ['K-MEANS', 'DBSCAN', 'CLUSTERING'],
@@ -95,6 +102,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'credit-scoring',
     title: 'ALTERNATIVE_CREDIT_SCORING',
+    year: '2023',
     category: 'Data Eng',
     image: '/images/Project_8.jpg',
     techStack: ['RISK MODELING', 'HYBRID SCORING', 'PANDAS'],
@@ -106,6 +114,7 @@ const RESUME_DATA: Project[] = [
   {
     id: 'demand-forecast',
     title: 'FLEET_DEMAND_FORECAST',
+    year: '2019',
     category: 'Data Eng',
     image: '/images/Project_9.jpg',
     techStack: ['ARIMA', 'TIME-SERIES', 'STL'],
@@ -243,7 +252,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                     </div>
                   )}
                   <div className="absolute top-2 right-2 bg-black text-white px-2 py-1 font-mono text-[10px] font-bold">
-                    2024
+                    {project.year}
                   </div>
                 </div>
 
@@ -292,36 +301,6 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                 <div className="col-span-5">TECH_STACK</div>
                 <div className="col-span-1 text-right">ACTION</div>
               </div>
-
-              {/* <div className="flex flex-col divide-y-2 divide-gray-100">
-                {listProjects.map((project) => (
-                  <div
-                    key={project.id}
-                    onClick={() => setSelectedProject(project)}
-                    className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 py-4 px-6 hover:bg-yellow-50 transition-colors items-center cursor-pointer"
-                  >
-                    <div className="col-span-2 font-mono text-xs font-bold text-gray-500">
-                      2023
-                    </div>
-                    <div className="col-span-4 font-black text-sm uppercase text-black group-hover:text-power transition-colors truncate pr-4">
-                      {project.title}
-                    </div>
-                    <div className="col-span-5 flex flex-wrap gap-2">
-                      {project.techStack.slice(0, 4).map((tag: string) => (
-                        <span key={tag} className="text-[10px] font-mono border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-gray-600 group-hover:border-black group-hover:bg-white transition-colors uppercase">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="col-span-1 flex justify-end">
-                      <div className="p-1 border border-transparent group-hover:border-black group-hover:bg-white rounded-none transition-all">
-                        <ArrowUpRight size={16} className="text-gray-300 group-hover:text-black" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div> */}
-
               <div className="flex flex-col divide-y-2 divide-gray-100">
                 {listProjects.map((project) => (
                   <div
@@ -331,7 +310,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                   >
                     {/* DATE */}
                     <div className="col-span-2 font-mono text-xs font-bold text-gray-400 md:text-gray-500 mb-1 md:mb-0">
-                      2023
+                      {project.year}
                     </div>
 
                     {/* TITLE (Added padding-right on mobile so text doesn't hit the arrow) */}
@@ -354,7 +333,6 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                         <ArrowUpRight size={18} className="text-gray-300 group-hover:text-black md:w-5 md:h-5" />
                       </div>
                     </div>
-
                   </div>
                 ))}
               </div>

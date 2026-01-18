@@ -299,9 +299,26 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                             <ToolButton icon={FileText} label="UPLOAD JD" onClick={() => fileInputRef.current?.click()} />
                             <ToolButton icon={Briefcase} label="CASE STUDIES" onClick={() => onNavigateToProjects(null)} />
                             <ToolButton icon={Code} label="TECH STACK" onClick={() => {
-                                const msg = "My Stack: Python, TensorFlow, React, Gemini API, Pinecone, FastAPI, Docker, Kubernetes.";
-                                setResponse(msg);
-                                playAudioResponse(msg);
+                                // 1. The Detailed Visual Output (Markdown)
+                                const visualMsg = `**// GENAI & AGENT SYSTEMS**
+Agentic Workflows (LangChain/LangGraph, CrewAI), Multi-Modal Models (Audio/Video/Image), RAG Pipelines, Fine-Tuning.
+
+**// Computer Vision & NLP**
+YOLO, CNN, Mask R-CNN, OpenCV, BERT, Image Segmentation, HuggingFace
+
+**// DATA SCIENCE & ML**
+Predictive Modeling, Model Interpretability (SHAP/LIME), Time Series Forecasting (ARIMA/Prophet), Clustering, Scikit-Learn, TensorFlow, PyTorch, XGBoost, CatBoost, LightGBM.
+
+**// FULL STACK**
+React, FastAPI, Node.js, TailwindCSS
+
+**// MLOPS, LLMOPS & CLOUD**
+AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLflow/W&B)`;
+                                // 2. The Audio Summary (Short & Natural)
+                                const audioMsg = "Accessing Technical Inventory. My core stack is built on Python and Gemini for AI, supported by React for frontend, and deployed via Docker and Kubernetes on Cloud infrastructure.";
+
+                                setResponse(visualMsg);
+                                playAudioResponse(audioMsg);
                             }} />
                             <ToolButton icon={Download} label="RESUME" onClick={() => window.open('/Satish_R_Singh_Group_Lead_Data_Scientist.pdf', '_blank')} className="text-power border-power" />
                         </div>

@@ -11,6 +11,7 @@ export interface Project {
     challenge?: string;
     solution?: string;
     impact?: string;
+    year: string;
 }
 
 interface ProjectModalProps {
