@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers, Trash2, Copy, Check } from 'lucide-react';
+import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers, Trash2, Copy, Check, Heart } from 'lucide-react';
 import { TechStackModal } from './TechStackModal';
+import { MotivationModal } from './MotivationModal';
 import { TrustMarquee } from './TrustMarquee';
 import ReactMarkdown from 'react-markdown';
 import { API_URL } from '../constants';
@@ -20,6 +21,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
     const [isLoading, setIsLoading] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const [isTechStackOpen, setIsTechStackOpen] = useState(false);
+    const [isMotivationOpen, setIsMotivationOpen] = useState(false);
     const [systemState, setSystemState] = useState<SystemState>('IDLE');
 
     // Audio State
@@ -257,12 +259,14 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                     {/* HERO HEADER */}
                     <div className="mb-6">
                         <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-3">
-                            I AM SATISH'S<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-400">AI AGENT.</span>
+                            I AM SATISH'S
                         </h1>
-                        <p className="text-sm md:text-base font-mono font-bold text-gray-500 max-w-4xl">
-                            Upload a JD to check fit, ask me anything about his professional experience.
-                        </p>
+                        <div className="flex items-baseline gap-4 flex-wrap">
+                            <span className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-400">AI AGENT.</span>
+                            <p className="text-sm md:text-base font-mono font-bold text-gray-500">
+                                Upload a JD to check fit, or ask me anything about his professional experience.
+                            </p>
+                        </div>
                     </div>
 
                     <div className="w-full flex flex-col gap-4 pr-0 lg:pr-8">
@@ -430,7 +434,12 @@ AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLfl
                         <Layers size={14} />
                         <span className="group-hover:underline decoration-power decoration-2">Explore tech stack behind this page</span>
                     </button>
+                    <button onClick={() => setIsMotivationOpen(true)} className="w-full max-w-[350px] mt-4 py-2 border-2 border-black font-mono font-bold text-xs uppercase bg-black text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 group shadow-hard-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                        <Heart size={14} />
+                        <span className="group-hover:underline decoration-power decoration-2">The motivation behind this page</span>
+                    </button>
                     <TechStackModal isOpen={isTechStackOpen} onClose={() => setIsTechStackOpen(false)} />
+                    <MotivationModal isOpen={isMotivationOpen} onClose={() => setIsMotivationOpen(false)} />
                 </div>
             </section>
 

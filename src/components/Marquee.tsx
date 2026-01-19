@@ -3,9 +3,9 @@ import React from 'react';
 export const Marquee: React.FC = () => {
   const items = [
     "SYSTEM_STATUS: OPERATIONAL",
-    "LOCATION: ABU DHABI, UAE",
-    "ROLE: GROUP LEAD DATA SCIENTIST",
-    "SPECIALTY: GEN_AI / RAG / LLM_OPS",
+    "LOCATION: DUBAI-ABU DHABI/UAE",
+    "ROLE: GROUP LEAD-DATA SCIENCE & AI",
+    "SPECIALTY: GEN_AI / RAG / EVALS / LLM_OPS / ML / CV / NLP",
     "LATEST_PUBLICATION: SPRINGER NATURE (2025)",
     "OPEN_TO_WORK: YES",
     "CURRENT_TIME: " + new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }) + " UTC+4"
