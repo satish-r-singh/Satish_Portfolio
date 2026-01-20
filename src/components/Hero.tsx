@@ -430,11 +430,11 @@ AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLfl
                             <img src="/images/satish_profile.png" alt="Satish Rohit Singh" className="w-full h-full object-cover" />
                         </div>
                     </div>
-                    <button onClick={() => setIsTechStackOpen(true)} className="w-full max-w-[350px] mt-4 py-2 border-2 border-black font-mono font-bold text-xs uppercase bg-white hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2 group shadow-hard-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                    <button onClick={() => setIsTechStackOpen(true)} className="w-full max-w-[350px] mx-auto lg:mx-0 mt-4 py-2 border-2 border-black font-mono font-bold text-xs uppercase bg-white hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2 group shadow-hard-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1">
                         <Layers size={14} />
                         <span className="group-hover:underline decoration-power decoration-2">Explore tech stack behind this page</span>
                     </button>
-                    <button onClick={() => setIsMotivationOpen(true)} className="w-full max-w-[350px] mt-4 py-2 border-2 border-black font-mono font-bold text-xs uppercase bg-black text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 group shadow-hard-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                    <button onClick={() => setIsMotivationOpen(true)} className="w-full max-w-[350px] mx-auto lg:mx-0 mt-4 py-2 border-2 border-black font-mono font-bold text-xs uppercase bg-black text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 group shadow-hard-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1">
                         <Heart size={14} />
                         <span className="group-hover:underline decoration-power decoration-2">The motivation behind this page</span>
                     </button>

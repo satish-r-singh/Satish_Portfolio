@@ -130,7 +130,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
             <div className="h-full flex flex-col animate-in fade-in slide-in-from-right-4 duration-300">
 
               {/* Image Container */}
-              <div className="w-full bg-gray-950 flex items-center justify-center border-b-3 border-black relative overflow-hidden py-8">
+              <div className="w-full bg-gray-950 flex items-center justify-center border-b-3 border-black relative overflow-hidden">
                 {/* Grid Pattern Overlay */}
                 <div className="absolute inset-0 opacity-10 pointer-events-none"
                   style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
@@ -140,7 +140,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
                 <img
                   src="/images/architecture_diagram.png"
                   alt="System Architecture Diagram"
-                  className="w-full max-w-4xl h-auto object-contain relative z-10"
+                  className="w-full h-auto object-contain relative z-10"
                 />
               </div>
 

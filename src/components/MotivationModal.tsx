@@ -44,7 +44,7 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="w-full max-w-4xl bg-white border-3 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[90vh] overflow-hidden relative flex flex-col">
+            <div className="w-full max-w-6xl bg-white border-3 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[90vh] overflow-hidden relative flex flex-col">
 
                 {/* HEADER - Reversed styling (white on black instead of black on white) */}
                 <div className="flex items-center justify-between p-6 border-b-3 border-black bg-white text-black shrink-0">
@@ -70,8 +70,8 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
 
                     {/* Intro Section */}
                     <div className="mb-8 border-l-4 border-power pl-6">
-                        <p className="font-mono text-lg md:text-xl text-white leading-relaxed">
-                            This isn't just a portfolio. It's a <span className="text-power font-bold">statement</span>.
+                        <p className="text-lg md:text-xl font-black text-white leading-relaxed">
+                            This isn't just a portfolio. It's a <span className="text-power">statement</span>.
                         </p>
                         <p className="font-mono text-sm text-gray-400 mt-2">
                             Here's why I built it this way.
@@ -79,21 +79,21 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
                     </div>
 
                     {/* Motivation Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                         {motivations.map((item, idx) => (
                             <div
                                 key={idx}
-                                className="p-5 border-2 border-gray-700 bg-gray-900 hover:border-power hover:translate-x-1 hover:shadow-[4px_4px_0px_0px_rgba(255,107,107,0.3)] transition-all group"
+                                className="p-5 border-2 border-white/20 bg-black hover:border-power hover:translate-x-1 hover:shadow-[4px_4px_0px_0px_rgba(255,107,107,0.3)] transition-all group"
                             >
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-black border border-gray-600 text-gray-400 group-hover:bg-power group-hover:text-white group-hover:border-power transition-colors">
+                                    <div className="p-2 bg-white/10 border border-white/30 text-white group-hover:bg-power group-hover:text-white group-hover:border-power transition-colors">
                                         <item.icon size={18} />
                                     </div>
                                     <h3 className="font-mono font-bold text-sm text-power uppercase tracking-wider">
                                         [{item.title}]
                                     </h3>
                                 </div>
-                                <p className="font-mono text-sm text-gray-300 leading-relaxed">
+                                <p className="font-mono text-sm text-white/80 leading-relaxed">
                                     {item.content}
                                 </p>
                             </div>
@@ -101,9 +101,9 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
                     </div>
 
                     {/* Footer Quote */}
-                    <div className="mt-10 pt-6 border-t-2 border-dashed border-gray-700">
+                    <div className="mt-10 pt-6 border-t-2 border-dashed border-white/20">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                            <p className="font-mono text-xs text-gray-500 max-w-2xl leading-relaxed italic">
+                            <p className="font-mono text-xs text-gray-400 max-w-2xl leading-relaxed italic">
                                 "The best way to predict the future is to invent it." — Alan Kay
                             </p>
                             <div className="flex items-center gap-2 px-4 py-2 border-2 border-power bg-power/10 shrink-0">
