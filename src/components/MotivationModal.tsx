@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Heart, Target, Lightbulb, Rocket, MessageSquare, Sparkles } from 'lucide-react';
+import { X, Heart, FileX, Lightbulb, Rocket, MessageSquare, Cpu, AlertTriangle } from 'lucide-react';
 
 interface MotivationModalProps {
     isOpen: boolean;
@@ -11,34 +11,34 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
 
     const motivations = [
         {
-            icon: Target,
-            title: "BEYOND_THE_RESUME",
-            content: "Traditional resumes and portfolios feel static—just bullet points and project lists. I wanted to create something that actually demonstrates my capabilities in real-time, not just describes them."
+            icon: FileX,
+            title: "THE_RESUME_PROBLEM",
+            content: "While the world keeps moving ahead, resumes are stuck in the 90s. Try to be just a little bit creative, and the ATS starts complaining. You're stuck with a few 'recommended' templates, which all look BORING."
+        },
+        {
+            icon: Lightbulb,
+            title: "THE_SPARK",
+            content: "Yes, the content of the resume can make you stand out, but I've always wanted the resume itself to stand out. I wanted to create something memorable. But then I risked angering the ATS Gods. The only option? Build a portfolio website and design it as I wished."
+        },
+        {
+            icon: Rocket,
+            title: "PORTFOLIO_OF_THE_FUTURE",
+            content: "I soon realized I had the opportunity to make this a '/portfolio-of-the-future'. Instead of a fancy static list of projects and companies, I wanted something that actually demonstrates my capabilities in real-time, not just describes them."
         },
         {
             icon: MessageSquare,
             title: "SHOW_DONT_TELL",
-            content: "Instead of saying 'I build AI systems,' I built an AI system that you can interact with right now. This page IS the proof of concept—a living, breathing demonstration of RAG architecture, multimodal AI, and modern web development."
+            content: "Instead of saying 'I build AI systems,' I built an AI system that you can interact with right now. This page IS the proof of concept. A living, breathing demonstration of RAG architecture, multimodal AI, and modern web development."
         },
         {
-            icon: Lightbulb,
-            title: "BRIDGING_THE_GAP",
-            content: "There's often a disconnect between what candidates claim and what they can actually deliver. This interactive experience bridges that gap by letting you experience my work firsthand—ask questions, upload a JD, hear the AI speak."
+            icon: Cpu,
+            title: "PRODUCTION_GRADE",
+            content: "Every component here reflects production-grade thinking: FastAPI backend with proper error handling, Pinecone vector database for semantic search, Gemini 2.5 for reasoning, and a carefully crafted minimalist neo-brutalist UI. It's not just a demo—it's architecture I'd deploy at scale."
         },
         {
-            icon: Rocket,
-            title: "TECHNICAL_SHOWCASE",
-            content: "Every component here reflects production-grade thinking: FastAPI backend with proper error handling, Pinecone vector database for semantic search, Gemini 2.5 for reasoning, and a carefully crafted neobrutalist UI. It's not just a demo—it's architecture I'd deploy at scale."
-        },
-        {
-            icon: Sparkles,
-            title: "STANDING_OUT",
-            content: "In a sea of PDF resumes and LinkedIn profiles, I wanted to create something memorable. Something that makes you think, 'This person doesn't just talk about AI—they build with it.'"
-        },
-        {
-            icon: Heart,
-            title: "PASSION_PROJECT",
-            content: "Ultimately, this page exists because I genuinely love what I do. Building AI systems that feel magical, crafting interfaces that delight users, solving complex technical challenges—this portfolio is an expression of that passion."
+            icon: AlertTriangle,
+            title: "INTENTIONAL_OVERKILL",
+            content: "Yes, in many ways, the tech behind this page is overkill. You don't need RAG to chat with someone's resume. The speech-to-text and text-to-speech aren't essential either. But that's okay. This page serves its purpose as a 'scaled-down live demonstrator' of some of my AI skills."
         }
     ];
 
@@ -71,10 +71,10 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
                     {/* Intro Section */}
                     <div className="mb-8 border-l-4 border-power pl-6">
                         <p className="text-lg md:text-xl font-black text-white leading-relaxed">
-                            This isn't just a portfolio. It's a <span className="text-power">statement</span>.
+                            "Ultimately, this page exists because I genuinely <span className="text-power">love what I do</span>.
                         </p>
                         <p className="font-mono text-sm text-gray-400 mt-2">
-                            Here's why I built it this way.
+                            Building AI systems that feel magical, crafting interfaces that delight users and solving complex technical challenges. This portfolio is an expression of that passion."
                         </p>
                     </div>
 
