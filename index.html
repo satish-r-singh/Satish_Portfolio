@@ -37,11 +37,17 @@
             'blink-bw': {
               '0%, 100%': { color: '#000000' },
               '50%': { color: '#ffffff' },
+            },
+            'blink-hard': {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0' },
             }
           },
           animation: {
             'marquee': 'marquee 25s linear infinite',
             'blink-bw': 'blink-bw 1s steps(2) infinite',
+            'blink': 'blink-hard 1s step-end infinite',
+
           }
         }
       }

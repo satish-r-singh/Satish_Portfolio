@@ -36,19 +36,20 @@ const directives = [
     )
   },
   {
-    id: "educator",
-    header: "THE EDUCATOR",
-    tag: "[ KNOWLEDGE_BASE ]",
-    intro: "I don't gatekeep knowledge.",
-    highlight: "I democratize it.",
-    details: "I partner with prestigious organizations globally to deliver training, mentorship, and research publications. Not because it's my job, but because I believe in democratizing knowledge. From publishing papers to upskilling enterprise teams, I bridge the gap between academic theory and industry reality.",
+    id: "governor",
+    header: "THE GOVERNOR",
+    tag: "[ GUARDRAILS_ACTIVE ]",
+    intro: "I don't trust magic.",
+    highlight: "I trust metrics.",
+    details: "Anyone can prompt a model; few can tame one. I prioritize [Evals & Guardrails] to turn stochastic AI into deterministic products. I implement rigorous testing frameworks to ensure that my Agents are safe, accurate, and boringly reliable in production.",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        <path d="M9 12l2 2 4-4"></path>
       </svg>
     )
   },
+
   {
     id: "pragmatist",
     header: "THE PRAGMATIST",
@@ -61,6 +62,35 @@ const directives = [
         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
       </svg>
     )
+  },
+  {
+    id: "educator",
+    header: "THE EDUCATOR",
+    tag: "[ KNOWLEDGE_BASE ]",
+    intro: "Not a trainer by trade.",
+    highlight: "An educator by passion.",
+    details: "I partner with prestigious organizations globally to deliver training, mentorship, and research publications—not because it's my job, but because I believe in democratizing intelligence. From publishing papers to upskilling enterprise teams, I bridge the gap between academic theory and industry reality.",
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+      </svg>
+    )
+  },
+  {
+    id: "future",
+    header: "// NEXT_ITERATION",
+    tag: "[ AWAITING_INPUT ]",
+    intro: "The code isn't finished.",
+    highlight: "Neither am I.",
+    details: "This is the empty slate for the '/Future-Me' to fill.|",
+
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    )
   }
 ];
 
@@ -70,6 +100,7 @@ export const CoreDirectives: React.FC = () => {
       <SectionDivider title="[ OPERATOR_PROFILE ]" className="pt-12" />
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 py-16 md:py-24">
 
+        {/* FORCE 2 COLUMNS ON DESKTOP */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {directives.map((item) => (
             <div
@@ -87,7 +118,7 @@ export const CoreDirectives: React.FC = () => {
               </div>
 
               {/* HEADER */}
-              <h3 className="font-sans font-black text-3xl md:text-4xl uppercase mb-3 leading-none tracking-tighter">
+              <h3 className="font-sans font-black text-3xl md:text-3xl uppercase mb-3 leading-none tracking-tighter">
                 {item.header}
               </h3>
 
@@ -101,7 +132,9 @@ export const CoreDirectives: React.FC = () => {
 
                 {/* Detailed Body */}
                 <p className="text-sm md:text-base text-gray-600 leading-relaxed text-justify">
-                  {item.details}
+                  {/* Remove the static pipe from text, then add the animated one */}
+                  {item.details.replace('|', '')}
+                  {item.id === 'future' && <span className="animate-blink font-black text-power ml-1">|</span>}
                 </p>
               </div>
             </div>
