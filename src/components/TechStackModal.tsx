@@ -114,7 +114,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
               <div className="mt-10 pt-6 border-t-3 border-dashed border-gray-300">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <p className="font-mono text-xs text-gray-500 max-w-2xl leading-relaxed">
-                    This system operates on a <strong>Production-Grade RAG Architecture</strong>. A <strong>FastAPI</strong> backend orchestrates semantic retrieval via <strong>Pinecone Vector DB</strong>, injecting grounded context into <strong>Gemini 2.5</strong> for high-fidelity reasoning. The audio interface is powered by the <strong>Gemini 2.5 Frontier TTS Model</strong>. Much of the <strong>Frontend</strong> was conceptualized and built using <strong>Google's Antigravity</strong>.
+                    This system operates on a <strong>Production-Grade RAG Architecture</strong>. A <strong>FastAPI</strong> backend orchestrates semantic retrieval via <strong>Pinecone Vector DB</strong>, injecting grounded context into <strong>Gemini 2.5</strong> for high-fidelity reasoning. The audio interface is powered by the <strong>Gemini 2.5 Frontier TTS Model</strong>. Much of the <strong>Frontend</strong> was conceptualized and built using <strong>Google's AI Studio and Antigravity</strong>.
                   </p>
                   <div className="flex items-center gap-2 px-4 py-2 border-2 border-gray-300 bg-gray-100 shrink-0">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

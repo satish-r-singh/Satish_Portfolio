@@ -104,21 +104,28 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                             {/* TAB 1: MISSION BRIEF */}
                             {activeTab === 'brief' && (
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
+
                                     <Section title="THE CHALLENGE" icon={Shield}>
                                         <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
-                                            {project.challenge || "Standard implementation challenge involving data scale and processing latency."}
+                                            {/* UPDATED: Uses RichText now */}
+                                            <RichText text={project.challenge || "Standard implementation challenge involving data scale and processing latency."} />
                                         </p>
                                     </Section>
+
                                     <Section title="THE SOLUTION" icon={Cpu}>
                                         <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
-                                            {project.solution || "Solution architecture deployed using the defined tech stack."}
+                                            {/* UPDATED: Uses RichText now */}
+                                            <RichText text={project.solution || "Solution architecture deployed using the defined tech stack."} />
                                         </p>
                                     </Section>
+
                                     <Section title="IMPACT & ROI" icon={ExternalLink}>
                                         <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
-                                            {project.impact || "Operational efficiency improvements and process automation."}
+                                            {/* UPDATED: Uses RichText now */}
+                                            <RichText text={project.impact || "Operational efficiency improvements and process automation."} />
                                         </p>
                                     </Section>
+
                                 </div>
                             )}
 
@@ -154,7 +161,28 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
     );
 };
 
-// Helper Components
+// --- HELPER COMPONENTS ---
+
+// 1. RichText: Parses **text** into bold
+const RichText: React.FC<{ text: string }> = ({ text }) => {
+    const parts = text.split(/(\*\*.*?\*\*)/);
+    return (
+        <span>
+            {parts.map((part, i) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                    return (
+                        <strong key={i} className="font-black text-black">
+                            {part.slice(2, -2)}
+                        </strong>
+                    );
+                }
+                return <span key={i}>{part}</span>;
+            })}
+        </span>
+    );
+};
+
+// 2. Tab Button
 const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
     <button
         onClick={onClick}
@@ -168,6 +196,7 @@ const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
     </button>
 );
 
+// 3. Section Wrapper
 const Section = ({ title, icon: Icon, children }: any) => (
     <div>
         <div className="flex items-center gap-2 mb-2 md:mb-3 text-power">

@@ -38,13 +38,16 @@ const RESUME_DATA: Project[] = [
     id: 'vision-damage',
     title: 'VISION_DAMAGE_ESTIMATOR',
     year: '2021',
-    category: 'ML Ops',
+    category: 'COMPUTER VISION // MLOPS // SAAS',
     image: '/images/Project_3.avif',
-    techStack: ['COMPUTER VISION', 'YOLO', 'AZURE', 'CNN'],
-    summary: 'Launched a SaaS offering on Azure using CNN, Mask R-CNN, and YOLO to automate damage assessment from images.',
-    challenge: 'Manual vehicle damage assessment was slow, subjective, and prone to human error.',
-    solution: 'Deployed a Computer Vision pipeline on Azure using Mask R-CNN and YOLO for automated defect recognition.',
-    impact: 'Reduced claim settlement lifecycle by 4 days and achieved annual savings of ~$200,000.'
+    techStack: ['AZURE', 'MASK R-CNN', 'YOLO', 'PYTHON', 'DOCKER'],
+    summary: 'Architected a production-grade SaaS on Azure using an ensemble of CNN models to automate insurance claims processing.',
+
+    challenge: 'The insurance claims lifecycle was bottlenecked by manual third-party assessments. The process was slow, highly subjective, and expensive, leading to "claims leakage" and poor customer retention.',
+
+    solution: 'Developed a state-of-the-art SaaS offering hosted on Microsoft Azure. I engineered an ensemble pipeline combining Mask R-CNN (segmentation) and YOLO (detection) to automatically identify, classify, and quantify vehicle damage severity from user-uploaded images.',
+
+    impact: 'Eliminated reliance on third-party assessors, achieving annual OPEX savings of **~$200,000 (ZAR 3.5M)**. Reduced the claim settlement lifecycle by **4 full days**, significantly boosting operational throughput.'
   },
   // --- CARD 4: PRICING ENGINE ---
   {
@@ -77,16 +80,19 @@ const RESUME_DATA: Project[] = [
     id: 'fraud-shield',
     title: 'INSURANCE_FRAUD_SHIELD',
     year: '2020',
-    category: 'ML Ops',
+    category: 'PREDICTIVE AI // FINTECH // RISK INTELLIGENCE',
     image: '/images/Project_6.jpg',
-    techStack: ['ANOMALY DETECTION', 'AWS', 'SKLEARN'],
-    summary: 'Led the implementation of an ML fraud detection system (92% accuracy) in collaboration with AIG.',
-    challenge: 'Rising fraudulent claims were causing significant financial leakage.',
-    solution: 'Implemented an automated flagging system using anomaly detection algorithms on claim metadata.',
-    impact: 'Reduced fraudulent claims by 25%, saving ~$1 Million (ZAR 15M).'
+    techStack: ['PYTHON', 'SCIKIT-LEARN', 'XGBOOST', 'PANDAS', 'SQL'],
+
+    summary: 'Partnered with AIG Insurance to deploy a high-precision fraud detection engine that saved $1M+ annually.',
+
+    challenge: 'The insurer was facing significant financial leakage due to sophisticated fraudulent claims. Manual review processes were reactive, slow, and failed to catch complex patterns, threatening the integrity of the insurance portfolio.',
+
+    solution: 'Collaborated directly with **AIG Insurance** to architect a Machine Learning-based Fraud Detection System. I implemented advanced regression and classification algorithms to score claims in real-time, creating a "Prioritized Review Queue" that flagged high-risk anomalies for immediate investigation.',
+
+    impact: 'Achieved a **92% Model Accuracy** rate, directly leading to a **25% reduction** in successful fraudulent claims. The system generated verified savings of over **$1 Million (ZAR 15M)** in its first year of operation.'
   },
-  // --- LIST ITEMS (The rest of the Resume) ---
-  // DETAILS ENRICHED FROM 'Satish Rohit Singh CV_Lead_Data_Scientist.pdf'
+
   {
     id: 'retail-clusters',
     title: 'RETAIL_SEGMENTATION_CLUSTERS',

@@ -83,22 +83,15 @@ limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# 1. FIX CORS
+# CORS Origins List
 origins = [
     "http://localhost:3000",           # Vite Localhost
+    "http://192.168.70.143:3000",      # Local Network IP
     "https://your-project.pages.dev",  # Your Cloudflare Domain (Add this later)
     "https://satish-portfolio-1at.pages.dev", # Example - Remove this later
     "https://www.satishrohitsingh.com",
     "https://satishrohitsingh.com",
 ]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
-)
 
 class ChatRequest(BaseModel):
     message: str
@@ -109,12 +102,25 @@ class TTSRequest(BaseModel):
 
 # Security Headers Middleware
 @app.middleware("http")
-async def add_security_headers(request, call_next):
+async def add_security_headers(request: Request, call_next):
+    # Skip OPTIONS requests to allow CORS preflight to work
+    if request.method == "OPTIONS":
+        return await call_next(request)
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     return response
+
+# CORS Middleware - MUST be added AFTER other middleware for correct order
+# (FastAPI runs middleware in reverse order of registration)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+)
 
 # Helper: Wave File Generator (From Cookbook)
 import wave
