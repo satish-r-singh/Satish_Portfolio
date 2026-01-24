@@ -1,18 +1,6 @@
 import React, { useState } from 'react';
 import { X, FileText, Layers, Shield, Cpu, ExternalLink, Image as ImageIcon } from 'lucide-react';
-
-export interface Project {
-    id: string;
-    title: string;
-    category: string;
-    image: string;
-    techStack: string[];
-    summary: string;
-    challenge?: string;
-    solution?: string;
-    impact?: string;
-    year: string;
-}
+import { Project } from '../types';
 
 interface ProjectModalProps {
     project: Project | null;

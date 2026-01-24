@@ -1,135 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Button } from './Button';
-import { Filter, Search, Terminal, ArrowUpRight, Layers } from 'lucide-react';
+import { Filter, Terminal, ArrowUpRight, Layers } from 'lucide-react';
 import { SectionDivider } from './SectionDivider';
-import { ProjectModal, Project } from './ProjectModal';
-
-// --- RESUME DATA SOURCE (SINGLE SOURCE OF TRUTH) ---
-// Extracted directly from Satish_Singh_resume.pdf and Satish Rohit Singh CV_Lead_Data_Scientist.pdf
-const RESUME_DATA: Project[] = [
-  // --- CARD 1: PORTFOLIO ---
-  {
-    id: 'portfolio-agent',
-    title: 'AI_PORTFOLIO_AGENT',
-    year: '2026',
-    category: 'Agents',
-    image: '/images/Project_1.avif',
-    techStack: ['AGENTS', 'RAG', 'REACT', 'GEMINI 2.5'],
-    summary: 'A self-aware digital twin built with RAG. It parses my real resume, interacts with recruiters via voice/chat, and performs gap analysis on uploaded Job Descriptions.',
-    challenge: 'Recruiters spend <10s on portfolios. Static sites fail to demonstrate actual AI engineering capabilities.',
-    solution: 'Built a full-stack RAG agent using Gemini 2.5 Flash. It ingests my resume/projects into Pinecone and answers questions contextually.',
-    impact: 'Reduced "time-to-understanding" for recruiters. Demonstrates full-stack AI capability live in the browser.'
-  },
-  // --- CARD 2: RAG BOT ---
-  {
-    id: 'knowledge-bot',
-    title: 'ENTERPRISE_KNOWLEDGE_BOT',
-    year: '2025',
-    category: 'RAG',
-    image: '/images/Project_2.avif',
-    techStack: ['RAG', 'DATA_ENG', 'LANGCHAIN', 'PINEONE'],
-    summary: 'Developed a GenAI search tool allowing call center agents to instantly query thousands of internal documents.',
-    challenge: 'Call center agents struggled with slow manual document searches, leading to high Time-to-Resolution (TTR).',
-    solution: 'Architected a scalable RAG pipeline enabling 40+ agents to query policies instantly using LangChain and Vector DBs.',
-    impact: 'Reduced Time-to-Resolution (TTR) by 20% and accelerated new agent onboarding.'
-  },
-  // --- CARD 3: VISION DAMAGE ---
-  {
-    id: 'vision-damage',
-    title: 'VISION_DAMAGE_ESTIMATOR',
-    year: '2021',
-    category: 'COMPUTER VISION // MLOPS // SAAS',
-    image: '/images/Project_3.avif',
-    techStack: ['AZURE', 'MASK R-CNN', 'YOLO', 'PYTHON', 'DOCKER'],
-    summary: 'Architected a production-grade SaaS on Azure using an ensemble of CNN models to automate insurance claims processing.',
-
-    challenge: 'The insurance claims lifecycle was bottlenecked by manual third-party assessments. The process was slow, highly subjective, and expensive, leading to "claims leakage" and poor customer retention.',
-
-    solution: 'Developed a state-of-the-art SaaS offering hosted on Microsoft Azure. I engineered an ensemble pipeline combining Mask R-CNN (segmentation) and YOLO (detection) to automatically identify, classify, and quantify vehicle damage severity from user-uploaded images.',
-
-    impact: 'Eliminated reliance on third-party assessors, achieving annual OPEX savings of **~$200,000 (ZAR 3.5M)**. Reduced the claim settlement lifecycle by **4 full days**, significantly boosting operational throughput.'
-  },
-  // --- CARD 4: PRICING ENGINE ---
-  {
-    id: 'predictive-pricing',
-    title: 'PREDICTIVE_PRICING_CORE',
-    year: '2020',
-    category: 'Data Eng',
-    image: '/images/Project_4.avif',
-    techStack: ['XGBOOST', 'SCIKIT-LEARN', 'PYTHON'],
-    summary: 'Built a multi-model valuation engine using Random Forest & XGBoost to estimate buy/sell prices with 96% R-square accuracy.',
-    challenge: 'Inaccurate manual pricing for fleet remarketing led to revenue leakage and slow transaction cycles.',
-    solution: 'Engineered a valuation core using Ensemble Methods (Random Forest + XGBoost) trained on historical auction data.',
-    impact: 'Increased average revenue per car by 10% and reduced transaction cycle times by 15%.'
-  },
-  // --- CARD 5: GENAI CONTENT HUB ---
-  {
-    id: 'genai-content',
-    title: 'GENAI_LEARNING_ECOSYSTEM',
-    year: '2025',
-    category: 'RAG',
-    image: '/images/Project_5.jpg',
-    techStack: ['GENAI', 'MULTI-MODAL', 'FFMPEG', 'OPENAI'],
-    summary: 'Architected a multi-modal content engine that ingests raw OEM assets (Images, PDFs, Videos) to automatically generate training modules.',
-    challenge: 'Reliance on external field training teams was costly and slow to update.',
-    solution: 'Created a pipeline to ingest raw PDFs/Videos and synthesize interactive training content using Multi-modal LLMs.',
-    impact: 'Replaced external field training teams with a one-stop integrated learning platform.'
-  },
-  // --- CARD 6: FRAUD SHIELD ---
-  {
-    id: 'fraud-shield',
-    title: 'INSURANCE_FRAUD_SHIELD',
-    year: '2020',
-    category: 'PREDICTIVE AI // FINTECH // RISK INTELLIGENCE',
-    image: '/images/Project_6.jpg',
-    techStack: ['PYTHON', 'SCIKIT-LEARN', 'XGBOOST', 'PANDAS', 'SQL'],
-
-    summary: 'Partnered with AIG Insurance to deploy a high-precision fraud detection engine that saved $1M+ annually.',
-
-    challenge: 'The insurer was facing significant financial leakage due to sophisticated fraudulent claims. Manual review processes were reactive, slow, and failed to catch complex patterns, threatening the integrity of the insurance portfolio.',
-
-    solution: 'Collaborated directly with **AIG Insurance** to architect a Machine Learning-based Fraud Detection System. I implemented advanced regression and classification algorithms to score claims in real-time, creating a "Prioritized Review Queue" that flagged high-risk anomalies for immediate investigation.',
-
-    impact: 'Achieved a **92% Model Accuracy** rate, directly leading to a **25% reduction** in successful fraudulent claims. The system generated verified savings of over **$1 Million (ZAR 15M)** in its first year of operation.'
-  },
-
-  {
-    id: 'retail-clusters',
-    title: 'RETAIL_SEGMENTATION_CLUSTERS',
-    year: '2023',
-    category: 'Data Eng',
-    image: '/images/Project_7.jpg',
-    techStack: ['K-MEANS', 'DBSCAN', 'CLUSTERING'],
-    summary: 'Solved unfair sales evaluations by developing clustering models to segment retail outlets.',
-    challenge: 'Assessing sales rep performance was unfair due to varying characteristics of retail stores (mall size, income levels). [cite: 151]',
-    solution: 'Developed clustering models (K-Means, DBSCAN) to segment retail stores based on floor size, household income, and catchment population. [cite: 153]',
-    impact: 'Facilitated accurate performance evaluations and enabled targeted marketing strategies for specific store types. [cite: 154]'
-  },
-  {
-    id: 'credit-scoring',
-    title: 'ALTERNATIVE_CREDIT_SCORING',
-    year: '2023',
-    category: 'Data Eng',
-    image: '/images/Project_8.jpg',
-    techStack: ['RISK MODELING', 'HYBRID SCORING', 'PANDAS'],
-    summary: 'Engineered a hybrid vetting system that moves beyond traditional bureau scores by ingesting alternative data.',
-    challenge: 'Traditional bureau scores excluded "thin-file" customers from lending opportunities, limiting market reach.',
-    solution: 'Ingested alternative data sources (Telco logs, bank statements) to build a hybrid risk score for unbanked customers.',
-    impact: 'Improved lending accuracy and expanded the addressable market while minimizing default risk.'
-  },
-  {
-    id: 'demand-forecast',
-    title: 'FLEET_DEMAND_FORECAST',
-    year: '2019',
-    category: 'Data Eng',
-    image: '/images/Project_9.jpg',
-    techStack: ['ARIMA', 'TIME-SERIES', 'STL'],
-    summary: 'Built Time Series models (ARIMA, STL) to predict fleet demand across locations.',
-    challenge: 'Accurately forecasting car rental demand was critical to optimize fleet utilization and reduce operational costs. [cite: 229]',
-    solution: 'Developed a Time Series model using ARIMA and STL (Seasonal Decomposition) to predict demand across various locations. [cite: 230]',
-    impact: 'Improved fleet utilization by 15%, allowing the organization to avoid over/under stocking. [cite: 232]'
-  }
-];
+import { ProjectModal } from './ProjectModal';
+import { Project } from '../types'; // Importing Type from shared file
+import { PROJECTS } from '../constants'; // <--- THE SINGLE SOURCE OF TRUTH
 
 interface ProjectGridProps {
   filter: string | null;
@@ -144,26 +18,31 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
     setSearchTerm(filter || '');
   }, [filter]);
 
+  // Categories for the filter buttons
   const categories = ['RAG', 'Agents', 'Data Eng', 'ML Ops'];
 
   // --- FILTERING LOGIC ---
-  const { gridProjects, listProjects, totalCount } = useMemo(() => {
+  const { gridProjects, listProjects } = useMemo(() => {
     const lowerTerm = searchTerm ? searchTerm.toLowerCase() : '';
 
-    const filtered = RESUME_DATA.filter(p => {
+    // NOW FILTERING FROM THE IMPORTED 'PROJECTS' CONSTANT
+    const filtered = PROJECTS.filter(p => {
       if (!lowerTerm) return true;
+
+      // Safety check: ensure arrays exist before calling .some()
+      const hasTech = p.techStack?.some(tag => tag.toLowerCase().includes(lowerTerm)) || false;
+
       return (
-        p.techStack.some(tag => tag.toLowerCase().includes(lowerTerm)) ||
-        p.summary.toLowerCase().includes(lowerTerm) ||
-        p.title.toLowerCase().includes(lowerTerm) ||
-        p.category.toLowerCase().includes(lowerTerm)
+        hasTech ||
+        (p.summary && p.summary.toLowerCase().includes(lowerTerm)) ||
+        (p.title && p.title.toLowerCase().includes(lowerTerm)) ||
+        (p.category && p.category.toLowerCase().includes(lowerTerm))
       );
     });
 
     return {
-      gridProjects: filtered.slice(0, 6), // Top 6 always cards
-      listProjects: filtered.slice(6),    // Rest are list
-      totalCount: filtered.length
+      gridProjects: filtered.slice(0, 6), // Top 6 are Cards
+      listProjects: filtered.slice(6)     // Rest are List items
     };
   }, [searchTerm]);
 
@@ -319,7 +198,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                       {project.year}
                     </div>
 
-                    {/* TITLE (Added padding-right on mobile so text doesn't hit the arrow) */}
+                    {/* TITLE */}
                     <div className="col-span-4 font-black text-sm uppercase text-black group-hover:text-power transition-colors truncate pr-8 md:pr-0">
                       {project.title}
                     </div>
@@ -333,7 +212,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                       ))}
                     </div>
 
-                    {/* ARROW: Absolute Top-Right on Mobile, Grid Column on Desktop */}
+                    {/* ARROW */}
                     <div className="absolute top-4 right-4 md:static md:col-span-1 md:flex md:justify-end">
                       <div className="p-1 border border-transparent group-hover:border-black group-hover:bg-white rounded-none transition-all">
                         <ArrowUpRight size={18} className="text-gray-300 group-hover:text-black md:w-5 md:h-5" />

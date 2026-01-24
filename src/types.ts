@@ -1,10 +1,15 @@
 export interface Project {
   id: string;
   title: string;
-  description: string;
-  tags: string[];
-  imageUrl: string;
-  link: string;
+  year: string;
+  category: string;
+  image: string;       // Matches data in constants.ts
+  techStack: string[]; // Matches data in constants.ts
+  summary: string;
+  challenge?: string;  // Optional, but used in your modal
+  solution?: string;   // Optional
+  impact?: string;     // Optional
+  link?: string;
 }
 
 export interface Experience {
