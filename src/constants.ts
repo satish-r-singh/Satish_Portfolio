@@ -22,7 +22,7 @@ export const PROJECTS = [
     year: '2026',
     category: 'NATIVE MULTIMODAL // SALES ENABLEMENT // AUTOMATION',
     image: '/images/Project_2.jpg',
-    techStack: ['GEMINI 3 MULTIMODAL', 'PYTHON', 'REACT', 'PINECONE', 'FASTAPI'],
+    techStack: ['GEMINI 3 MULTIMODAL', 'PYTHON', 'EVALS', 'LLMOPS', 'REACT', 'PINECONE', 'FASTAPI'],
     summary: 'Architected a native multimodal engine that auto-generates sales training modules from raw OEM technical assets.',
     challenge: 'The sales team faced a "Knowledge Gap"—new product features were shipping faster than the training department could produce curriculum. Previous pipelines were brittle, requiring complex OCR for PDFs and separate processing for video, resulting in a 4-week lag time.',
     solution: 'Engineered a **Native Multimodal Pipeline** using **Gemini 3**. By leveraging its native video and document understanding, I **eliminated the OCR and Parser layers entirely**. The model directly ingests raw OEM PDFs (preserving table/chart context) and technical videos in a single pass, synthesizing them into interactive sales training scripts and quizzes.',
@@ -34,7 +34,7 @@ export const PROJECTS = [
     year: '2025',
     category: 'AGENTIC RAG // COGNITIVE SEARCH // NLP',
     image: '/images/Project_3.avif',
-    techStack: ["PYTHON", "LANGCHAIN AGENTS", "PINECONE", "OPENAI", "STREAMLIT"],
+    techStack: ["PYTHON", "LANGCHAIN AGENTS", "PINECONE", "EVALS", "OPENAI", "STREAMLIT"],
     summary: 'Deployed an autonomous support agent capable of multi-step reasoning to answer complex internal policy queries.',
     challenge: 'Customer support agents were struggling with "Composite Queries"—questions that required synthesizing information from multiple disconnected PDF manuals and SharePoint sites. Simple keyword search failed to capture the necessary context, leading to long hold times.',
     solution: 'Architected an **Agentic RAG System** using LangChain. Unlike standard retrieval, this system utilizes a **ReAct (Reason + Act) Loop** to decompose complex user questions into sub-tasks. It autonomously decides when to query the **Pinecone Vector Database**, how to filter the results, and synthesizes answers from multiple documents in a single reasoning step.',
@@ -258,7 +258,7 @@ export const SKILLS: Skill[] = [
     category: "GENERATIVE AI & AGENTS",
     status: "PRIMARY FOCUS",
     score: 99,
-    tools: ["Agentic Workflows", "RAG Pipelines", "LangChain", "Gemini API", "OpenAI API", "Claude API", "Pinecone"],
+    tools: ["Agentic Workflows", "RAG Pipelines", "EVALS", "LangChain", "CREWAI", "Gemini/OpenAI/Claude APIs", "Pinecone"],
     details: "Architecting autonomous reasoning systems, multi-modal retrieval engines, and digital twins."
   },
   {

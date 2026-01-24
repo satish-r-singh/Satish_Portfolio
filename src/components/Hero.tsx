@@ -139,21 +139,20 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                             <ToolButton icon={FileText} label="UPLOAD JD" onClick={() => fileInputRef.current?.click()} />
                             <ToolButton icon={Briefcase} label="CASE STUDIES" onClick={() => onNavigateToProjects(null)} />
                             <ToolButton icon={Code} label="TECH STACK" onClick={() => {
-                                const visualMsg = `**// GENAI & AGENT SYSTEMS**
-Agentic Workflows (LangChain/LangGraph, CrewAI), Multi-Modal Models (Audio/Video/Image), RAG Pipelines, Fine-Tuning.
+                                const visualMsg = `**// GENAI & AGENTIC SYSTEMS**
+RAG Pipelines, LangChain/LangGraph, CrewAI, Gemini 1.5 Pro, Multi-Modal Agents, Vector DBs (Pinecone/Chroma), Evals (Ragas/DeepEval).
 
-**// Computer Vision & NLP**
-YOLO, CNN, Mask R-CNN, OpenCV, BERT, Image Segmentation, HuggingFace
+**// DATA SCIENCE & DEEP LEARNING**
+PyTorch, TensorFlow, Computer Vision (YOLO/CNN), NLP (BERT/Transformers), Time-Series (DeepAR/Prophet), Causal Inference, XGBoost.
 
-**// DATA SCIENCE & ML**
-Predictive Modeling, Model Interpretability (SHAP/LIME), Time Series Forecasting (ARIMA/Prophet), Clustering, Scikit-Learn, TensorFlow, PyTorch, XGBoost, CatBoost, LightGBM.
+**// BIG DATA & MLOPS**
+Apache Spark, Databricks, Airflow, MLflow, Experiment Tracking, Model Registry, Distributed Computing.
 
-**// FULL STACK**
-React, FastAPI, Node.js, TailwindCSS
+**// CLOUD ARCHITECTURE**
+Azure, AWS (Bedrock/SageMaker), Docker, Kubernetes, Terraform, Serverless (Lambda/Functions).`;
 
-**// MLOPS, LLMOPS & CLOUD**
-AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLflow/W&B)`;
-                                const audioMsg = "Accessing Technical Inventory. My core stack is built on Python and Gemini for AI, supported by React for frontend, and deployed via Docker and Kubernetes on Cloud infrastructure.";
+                                const audioMsg = "Accessing Technical Inventory. My architecture is a hybrid system that fuses Generative AI with Deep Learning for advanced reasoning. I anchor this intelligence with enterprise-grade data pipelines using Apache Spark and Databricks to handle massive scale. The entire ecosystem is containerized via Docker and orchestrated on Kubernetes, ensuring that my solutions are not just intelligent, but production-ready and resilient.";
+
                                 setResponse(visualMsg);
                                 playAudioResponse(audioMsg);
                             }} />
@@ -175,7 +174,7 @@ AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLfl
 
                                 <div className="flex items-center gap-3">
                                     <button
-                                        onClick={toggleAudio}
+                                        onClick={() => toggleAudio(response || undefined)}
                                         className={`flex items-center gap-1.5 transition-colors ${isAudioOn ? 'text-power' : 'text-gray-500 hover:text-white'}`}
                                         title="Toggle Sound"
                                     >

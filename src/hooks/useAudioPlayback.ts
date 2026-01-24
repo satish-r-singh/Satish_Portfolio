@@ -9,7 +9,7 @@ interface UseAudioPlaybackOptions {
 interface UseAudioPlaybackReturn {
     isAudioOn: boolean;
     isPlaying: boolean;
-    toggleAudio: () => void;
+    toggleAudio: (existingResponseText?: string) => void;
     stopAudio: () => void;
     playAudioResponse: (text: string) => Promise<void>;
     setSystemState: (state: 'IDLE' | 'SPEAKING') => void;
@@ -59,9 +59,18 @@ export const useAudioPlayback = ({
         };
     }, [stopAudio]);
 
-    const playAudioResponse = useCallback(async (text: string) => {
+    const playAudioResponse = useCallback(async (text: string, forceRefresh = false) => {
         if (!isAudioOnRef.current) return;
+
+        // Check cache first - if we have audio for the same text, reuse it
+        if (!forceRefresh && audioCache.current && audioCache.current.text === text) {
+            log('> USING_CACHED_AUDIO');
+            playBlobUrl(audioCache.current.url);
+            return;
+        }
+
         setSystemState('SPEAKING');
+        log('> GENERATING_AUDIO... (this may take up to 20 seconds)');
 
         try {
             const res = await fetch(`${API_URL}/tts`, {
@@ -80,7 +89,7 @@ export const useAudioPlayback = ({
         }
     }, [log, playBlobUrl]);
 
-    const toggleAudio = useCallback(() => {
+    const toggleAudio = useCallback((existingResponseText?: string) => {
         const newState = !isAudioOn;
         setIsAudioOn(newState);
         isAudioOnRef.current = newState;
@@ -88,8 +97,11 @@ export const useAudioPlayback = ({
 
         if (!newState) {
             stopAudio();
+        } else if (existingResponseText) {
+            // If toggling ON and there's existing text, play it (will use cache if available)
+            playAudioResponse(existingResponseText);
         }
-    }, [isAudioOn, log, stopAudio]);
+    }, [isAudioOn, log, stopAudio, playAudioResponse]);
 
     return {
         isAudioOn,

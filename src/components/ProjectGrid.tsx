@@ -19,7 +19,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
   }, [filter]);
 
   // Categories for the filter buttons
-  const categories = ['RAG', 'Agents', 'Data Eng', 'ML Ops'];
+  const categories = ['RAG', 'AGENTS', 'LLMOPS', 'XGBOOST', 'SQL', 'PYTHON', 'PANDAS', 'GAME THEORY', 'ARIMA', 'LANGCHAIN', 'YOLO'];
 
   // --- FILTERING LOGIC ---
   const { gridProjects, listProjects } = useMemo(() => {
