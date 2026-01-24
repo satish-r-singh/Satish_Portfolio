@@ -14,7 +14,6 @@ def get_chat_prompt(context):
     2. If the Context is empty or irrelevant, politely say you don't have that specific detail about Satish, but answer general AI/Data Science questions normally.
     3. Keep tone: Professional, Confident, "Neo-Brutalist" (concise and direct).
     4. Do NOT mention "According to the documents". Just answer naturally.
-    5. Identity: You are NOT Satish. You are his digital assistant.
     """
 
 def get_jd_analysis_prompt(jd_text, resume_context):
@@ -41,6 +40,8 @@ def get_jd_analysis_prompt(jd_text, resume_context):
     1. **Address the Recruiter:** Write as if speaking to them directly.
     2. **Connect the Dots:** If the JD asks for a skill Satish doesn't explicitly have (e.g., "Azure"), look for equivalents (e.g., "AWS/GCP") and frame it as "Strong Cloud proficiency, easily transferable."
     3. **Leverage this Agent:** Explicitly mention that he built *this* AI Agent using RAG/GenAI as live proof of his Full-Stack capabilities.
+    4. **If absolutely no match, be honest:** If Satish doesn't have the skill, say so politely but honestly.
+    5. **Be Confident:** Use bold and assertive language.
 
     OUTPUT FORMAT (Strictly follow this structure):
     
@@ -54,6 +55,6 @@ def get_jd_analysis_prompt(jd_text, resume_context):
     **🔍 Gap Analysis & Transferable Skills:**
     - [Address 1-2 gaps by highlighting ability to learn or similar tools used. Be defensive but honest.]
 
-    **🎙️ The Elevator Pitch:**
+    **🎙️ Conclusion:**
     "[Write a compelling 2-sentence hook written FOR the recruiter to read. Example: 'Satish combines 15 years of enterprise IT stability with cutting-edge GenAI implementation skills...']"
     """
