@@ -15,7 +15,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
 
     return (
         // Z-Index 99999 ensures it sits above everything.
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 md:p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 animate-in fade-in duration-200">
 
             {/* Backdrop */}
             <div
@@ -24,23 +24,25 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
             />
 
             {/* THE MODAL CARD
-         CHANGES FOR MOBILE:
-         1. w-[95vw]: Forces the modal to be 95% of screen width. Prevents border overflow.
-         2. max-h-[90dvh]: Uses Dynamic Viewport Height to avoid getting cut off by the URL bar.
-         3. overflow-hidden: Ensures inner content doesn't push the width out.
+         FIXES:
+         1. w-full max-w-[90vw]: Ensures it never touches the screen edges on mobile.
+         2. shadow-[4px]: Reduced shadow on mobile to prevent bleed-out.
+         3. max-h-[85dvh]: Adjusted height to be safe on all mobile browsers.
       */}
             <div
-                className="relative bg-white border-3 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col 
-        w-[95vw] md:w-full max-w-5xl 
-        max-h-[90dvh] md:h-[85vh]
-        overflow-hidden box-border"
+                className="relative bg-white border-3 border-black 
+        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] 
+        flex flex-col 
+        w-full max-w-[90vw] md:max-w-5xl 
+        max-h-[85dvh] md:h-[85vh]
+        overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
             >
 
                 {/* --- HEADER (Fixed) --- */}
                 <div className="flex items-center justify-between p-3 md:p-4 border-b-3 border-black bg-gray-100 shrink-0">
-                    <div className="flex items-center gap-3 overflow-hidden">
-                        <h2 className="font-black text-sm md:text-xl uppercase tracking-tighter truncate">
+                    <div className="flex items-center gap-3 overflow-hidden min-w-0">
+                        <h2 className="font-black text-xs md:text-xl uppercase tracking-tighter truncate">
                             CASE_FILE: {project.title}
                         </h2>
                     </div>
@@ -48,19 +50,18 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                         onClick={onClose}
                         className="p-1 md:p-2 hover:bg-black hover:text-white transition-colors border-2 border-transparent hover:border-black shrink-0 rounded-sm"
                     >
-                        <X size={20} strokeWidth={3} className="md:w-6 md:h-6" />
+                        <X size={18} strokeWidth={3} className="md:w-6 md:h-6" />
                     </button>
                 </div>
 
                 {/* --- SCROLLABLE CONTENT --- */}
-                {/* Mobile: The parent scrolls. Desktop: The internal panels scroll. */}
                 <div className="flex flex-col md:flex-row flex-grow overflow-y-auto md:overflow-hidden">
 
                     {/* === LEFT COLUMN: VISUALS === */}
                     <div className="w-full md:w-1/3 bg-gray-50 border-b-3 md:border-b-0 md:border-r-3 border-black p-4 md:p-6 flex flex-col gap-4 md:gap-6 shrink-0 md:overflow-y-auto">
 
                         {/* Image Container */}
-                        <div className="h-48 md:h-auto md:aspect-video w-full border-3 border-black grayscale bg-white flex items-center justify-center overflow-hidden relative shrink-0">
+                        <div className="h-40 md:h-auto md:aspect-video w-full border-3 border-black grayscale bg-white flex items-center justify-center overflow-hidden relative shrink-0">
                             {project.image ? (
                                 <img
                                     src={project.image}
@@ -75,13 +76,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                             )}
                         </div>
 
-                        {/* Domain Tags - Added break-words to prevent overflow */}
-                        <div>
+                        {/* Domain Tags - FORCED WRAPPING FIX */}
+                        <div className="w-full">
                             <h3 className="font-mono text-xs font-bold text-gray-500 uppercase mb-2">[ DOMAIN ]</h3>
-                            <div className="bg-black text-white px-2 py-1 inline-block">
-                                <span className="font-bold text-sm md:text-lg break-words whitespace-normal leading-tight">
+                            <div className="bg-black text-white px-2 py-1 w-fit max-w-full box-border">
+                                <p className="font-bold text-xs md:text-lg break-words whitespace-normal leading-snug">
                                     {project.category}
-                                </span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -106,24 +107,24 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                         </div>
 
                         {/* Tab Content */}
-                        <div className="p-6 md:p-8 md:overflow-y-auto custom-scrollbar flex-grow">
+                        <div className="p-5 md:p-8 md:overflow-y-auto custom-scrollbar flex-grow">
 
                             {activeTab === 'brief' && (
-                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
+                                <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
                                     <Section title="THE CHALLENGE" icon={Shield}>
-                                        <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
+                                        <p className="text-gray-700 leading-relaxed font-medium text-xs md:text-base border-l-2 border-gray-200 pl-4">
                                             <RichText text={project.challenge || "No challenge data available."} />
                                         </p>
                                     </Section>
 
                                     <Section title="THE SOLUTION" icon={Cpu}>
-                                        <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
+                                        <p className="text-gray-700 leading-relaxed font-medium text-xs md:text-base border-l-2 border-gray-200 pl-4">
                                             <RichText text={project.solution || project.summary} />
                                         </p>
                                     </Section>
 
                                     <Section title="IMPACT & ROI" icon={ExternalLink}>
-                                        <p className="text-gray-700 leading-relaxed font-medium text-sm md:text-base border-l-2 border-gray-200 pl-4">
+                                        <p className="text-gray-700 leading-relaxed font-medium text-xs md:text-base border-l-2 border-gray-200 pl-4">
                                             <RichText text={project.impact || "Impact data pending analysis."} />
                                         </p>
                                     </Section>
@@ -136,11 +137,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                                         <p className="font-mono text-sm text-gray-500 mb-4">
                       // TECHNOLOGIES DEPLOYED
                                         </p>
-                                        <div className="flex flex-wrap gap-3">
+                                        <div className="flex flex-wrap gap-2 md:gap-3">
                                             {project.techStack.map(tech => (
-                                                <div key={tech} className="flex items-center gap-2 px-3 py-2 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:shadow-none transition-all">
-                                                    <div className="w-2 h-2 bg-power rounded-full"></div>
-                                                    <span className="font-mono text-xs md:text-sm font-bold uppercase">{tech}</span>
+                                                <div key={tech} className="flex items-center gap-2 px-2 md:px-3 py-2 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:shadow-none transition-all">
+                                                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-power rounded-full"></div>
+                                                    <span className="font-mono text-[10px] md:text-sm font-bold uppercase">{tech}</span>
                                                 </div>
                                             ))}
                                         </div>
