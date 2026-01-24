@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers, Trash2, Copy, Check, Heart } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Activity, Terminal, FileText, Briefcase, Code, Download, Mic, MicOff, Volume2, VolumeX, Layers, Trash2, Heart } from 'lucide-react';
 import { TechStackModal } from './TechStackModal';
 import { MotivationModal } from './MotivationModal';
 import { TrustMarquee } from './TrustMarquee';
 import ReactMarkdown from 'react-markdown';
-import { API_URL } from '../constants';
+import { useAudioPlayback, useSpeechRecognition, useChat } from '../hooks';
 
 type SystemState = 'IDLE' | 'PROCESSING' | 'SPEAKING' | 'LISTENING';
 
@@ -14,238 +14,76 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled: initialAudioState }) => {
-    // --- STATE ---
-    const [input, setInput] = useState('');
-    const [response, setResponse] = useState<string | null>(null);
-    const [consoleLogs, setConsoleLogs] = useState<string[]>(['> SYSTEM_READY...', '> WAITING_FOR_INPUT_SIGNAL...']);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isListening, setIsListening] = useState(false);
+    // --- MODALS ---
     const [isTechStackOpen, setIsTechStackOpen] = useState(false);
     const [isMotivationOpen, setIsMotivationOpen] = useState(false);
-    const [systemState, setSystemState] = useState<SystemState>('IDLE');
 
-    // Audio State
-    const [isAudioOn, setIsAudioOn] = useState(initialAudioState);
-    const [isPlaying, setIsPlaying] = useState(false);
-
-    // --- REFS ---
-    const currentAudioRef = useRef<HTMLAudioElement | null>(null);
-    const audioCache = useRef<{ text: string; url: string } | null>(null);
-    const isAudioOnRef = useRef(isAudioOn);
-    const recognitionRef = useRef<any>(null);
+    // --- FILE INPUT REF ---
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const consoleContainerRef = useRef<HTMLDivElement>(null);
 
-    // Sync Refs
-    useEffect(() => { isAudioOnRef.current = isAudioOn; }, [isAudioOn]);
+    // --- CUSTOM HOOKS ---
+    const {
+        input,
+        setInput,
+        response,
+        setResponse,
+        consoleLogs,
+        isLoading,
+        systemState,
+        setSystemState,
+        addLog,
+        processQuery,
+        handleFileUpload: processFileUpload,
+        handleClear: clearChat,
+        consoleContainerRef
+    } = useChat({
+        onAudioResponse: (text) => playAudioResponse(text)
+    });
 
-    // Auto-scroll logic
-    useEffect(() => {
-        if (consoleContainerRef.current) {
-            consoleContainerRef.current.scrollTop = consoleContainerRef.current.scrollHeight;
+    const {
+        isAudioOn,
+        isPlaying,
+        toggleAudio,
+        stopAudio,
+        playAudioResponse,
+        systemState: audioSystemState
+    } = useAudioPlayback({
+        initialEnabled: initialAudioState,
+        onLog: addLog
+    });
+
+    const {
+        isListening,
+        toggleListening
+    } = useSpeechRecognition({
+        onResult: (transcript) => {
+            setInput(transcript);
+            processQuery(transcript);
+        },
+        onLog: addLog,
+        onStart: () => {
+            setSystemState('LISTENING');
+            setResponse(null);
+            setInput('');
         }
-    }, [consoleLogs, response, isLoading]);
+    });
 
-    // --- HELPER: ADD LOG ---
-    const addLog = (msg: string) => {
-        const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
-        setConsoleLogs(prev => [...prev, `[${timestamp}] ${msg}`]);
-    };
+    // Combine system states for UI display
+    const displayState: SystemState = isListening ? 'LISTENING' :
+        audioSystemState === 'SPEAKING' ? 'SPEAKING' :
+            systemState;
 
-    // --- LOGIC: CLEAR CONSOLE ---
+    // --- HANDLERS ---
     const handleClear = () => {
-        setResponse(null);
-        setConsoleLogs(['> SYSTEM_READY...', '> WAITING_FOR_INPUT_SIGNAL...']);
-        setSystemState('IDLE');
-        if (currentAudioRef.current) {
-            currentAudioRef.current.pause();
-            currentAudioRef.current.currentTime = 0;
-            setIsPlaying(false);
-        }
-    };
-
-    // --- LOGIC: AUDIO CONTROL ---
-    const toggleAudio = () => {
-        const newState = !isAudioOn;
-        setIsAudioOn(newState);
-        isAudioOnRef.current = newState;
-        addLog(newState ? '> AUDIO_OUTPUT_ENABLED' : '> AUDIO_OUTPUT_MUTED');
-
-        if (newState && response) {
-            if (audioCache.current && audioCache.current.text === response) {
-                playBlobUrl(audioCache.current.url);
-            } else {
-                playAudioResponse(response);
-            }
-        } else if (!newState) {
-            stopAudio();
-        }
-    };
-
-    const stopAudio = () => {
-        if (currentAudioRef.current) {
-            currentAudioRef.current.pause();
-            currentAudioRef.current.currentTime = 0;
-        }
-        setIsPlaying(false);
-        setSystemState('IDLE');
-    };
-
-    const playBlobUrl = (url: string) => {
+        clearChat();
         stopAudio();
-        const audio = new Audio(url);
-        currentAudioRef.current = audio;
-        setSystemState('SPEAKING');
-        setIsPlaying(true);
-        audio.play().catch(e => console.error("Playback failed:", e));
-        audio.onended = () => {
-            setIsPlaying(false);
-            setSystemState('IDLE');
-        };
-    };
-
-    const playAudioResponse = async (text: string) => {
-        if (!isAudioOnRef.current) return;
-        setSystemState('SPEAKING');
-
-        try {
-            const res = await fetch(`${API_URL}/tts`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: text }),
-            });
-            if (!res.ok) throw new Error(`Server returned ${res.status}`);
-            const blob = await res.blob();
-            const audioUrl = URL.createObjectURL(blob);
-            audioCache.current = { text: text, url: audioUrl };
-            playBlobUrl(audioUrl);
-        } catch (error) {
-            addLog("⚠️ TTS_ERROR: AUDIO_GENERATION_FAILED");
-            setSystemState('IDLE');
-        }
-    };
-
-    // --- LOGIC: PROCESS QUERY ---
-    const determineTool = (text: string): string => {
-        const t = text.toLowerCase();
-        if (t.includes('resume') || t.includes('job') || t.includes('hire') || t.includes('jd')) return 'JD_MATCHER';
-        return 'RAG';
-    };
-
-    const processQuery = async (queryText: string) => {
-        if (!queryText || !queryText.trim()) return;
-
-        setResponse(null);
-        setIsLoading(true);
-        setSystemState('PROCESSING');
-
-        if (consoleLogs.length > 20) {
-            setConsoleLogs(['> HISTORY_ARCHIVED...', '> INITIALIZING_NEW_QUERY...']);
-        } else {
-            addLog('> INITIALIZING_QUERY_SEQUENCE...');
-        }
-
-        addLog(`> INPUT_RECEIVED: "${queryText.substring(0, 20)}..."`);
-
-        const tool = determineTool(queryText);
-        setTimeout(() => {
-            addLog(`> TOOL_SELECTED: ${tool}_PROTOCOL`);
-        }, 500);
-
-        try {
-            if (tool === 'JD_MATCHER') addLog('> PARSING_CONTEXT_WINDOW...');
-
-            const apiResponse = await fetch(`${API_URL}/chat`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: queryText, session_id: "guest_browser" }),
-            });
-
-            if (!apiResponse.ok) throw new Error(`Server Error: ${apiResponse.status}`);
-            const data = await apiResponse.json();
-
-            addLog('> RESPONSE_GENERATED_SUCCESSFULLY');
-            setResponse(data.response);
-            playAudioResponse(data.response);
-
-        } catch (error) {
-            addLog('⚠️ CRITICAL_ERROR: BACKEND_UNREACHABLE');
-            setResponse("⚠️ ERROR: Neural Link Offline. Please check backend connection.");
-        } finally {
-            setIsLoading(false);
-            if (!isAudioOnRef.current) setSystemState('IDLE');
-        }
     };
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
-
-        setResponse(null);
-        setIsLoading(true);
-        setSystemState('PROCESSING');
-        setConsoleLogs(['> FILE_UPLOAD_DETECTED...']);
-
-        setTimeout(() => {
-            addLog(`> READING_FILE: ${file.name}`);
-            addLog('> EXTRACTING_ENTITIES: SKILLS, EXPERIENCE, ROLES...');
-        }, 500);
-
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-            const res = await fetch(`${API_URL}/analyze_jd`, { method: "POST", body: formData });
-            const data = await res.json();
-
-            addLog('> ANALYSIS_COMPLETE: GENERATING_REPORT...');
-            setResponse(data.response);
-            playAudioResponse(data.response);
-        } catch (error) {
-            addLog('⚠️ UPLOAD_ERROR: PARSING_FAILED');
-            setResponse("⚠️ Error reading file.");
-        } finally {
-            setIsLoading(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
-        }
-    };
-
-    // --- LOGIC: MIC INPUT ---
-    const handleMicClick = () => {
-        if (isListening) {
-            if (recognitionRef.current) recognitionRef.current.stop();
-            setIsListening(false);
-            return;
-        }
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert("Voice input is not supported in this browser. Please use Chrome.");
-            return;
-        }
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.continuous = false;
-
-        recognition.onstart = () => {
-            setIsListening(true);
-            setSystemState('LISTENING');
-            setResponse(null);
-            setConsoleLogs(['> MICROPHONE_ACTIVE... LISTENING_FOR_WAVEFORMS...']);
-            setInput('');
-        };
-
-        recognition.onresult = (event: any) => {
-            const transcript = event.results[0][0].transcript;
-            setInput(transcript);
-            addLog(`> SPEECH_DETECTED: "${transcript}"`);
-            processQuery(transcript);
-        };
-
-        recognition.onend = () => {
-            setIsListening(false);
-        };
-        recognitionRef.current = recognition;
-        recognition.start();
+        await processFileUpload(file);
+        if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
     return (
@@ -271,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
 
                     <div className="w-full flex flex-col gap-4 pr-0 lg:pr-8">
 
-                        {/* 1. INPUT ROW - HEIGHT REDUCED TO h-12 */}
+                        {/* 1. INPUT ROW */}
                         <div className="flex relative z-30 shadow-hard w-full h-12">
                             <form onSubmit={(e) => { e.preventDefault(); processQuery(input); }} className="flex-grow flex h-full">
                                 <div className="flex-grow bg-white border-3 border-black border-r-0 relative flex items-center group h-full">
@@ -287,7 +125,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                                     />
                                 </div>
                             </form>
-                            <button onClick={handleMicClick} className={`w-14 md:w-16 border-t-3 border-b-3 border-black border-l-3 lg:border-l-0 flex flex-col items-center justify-center gap-0.5 cursor-pointer ${isListening ? 'bg-power text-white animate-pulse' : 'bg-black text-white hover:bg-gray-900'}`}>
+                            <button onClick={toggleListening} className={`w-14 md:w-16 border-t-3 border-b-3 border-black border-l-3 lg:border-l-0 flex flex-col items-center justify-center gap-0.5 cursor-pointer ${isListening ? 'bg-power text-white animate-pulse' : 'bg-black text-white hover:bg-gray-900'}`}>
                                 {isListening ? <MicOff size={18} /> : <Mic size={18} strokeWidth={2.5} />}
                                 <span className="font-mono text-[9px] font-bold">VOICE</span>
                             </button>
@@ -296,12 +134,11 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToProjects, isAudioEnabled
                             </button>
                         </div>
 
-                        {/* 2. TOOLS ROW - KEPT AT h-12 TO MATCH INPUT ROW */}
+                        {/* 2. TOOLS ROW */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 relative z-20">
                             <ToolButton icon={FileText} label="UPLOAD JD" onClick={() => fileInputRef.current?.click()} />
                             <ToolButton icon={Briefcase} label="CASE STUDIES" onClick={() => onNavigateToProjects(null)} />
                             <ToolButton icon={Code} label="TECH STACK" onClick={() => {
-                                // 1. The Detailed Visual Output (Markdown)
                                 const visualMsg = `**// GENAI & AGENT SYSTEMS**
 Agentic Workflows (LangChain/LangGraph, CrewAI), Multi-Modal Models (Audio/Video/Image), RAG Pipelines, Fine-Tuning.
 
@@ -316,34 +153,27 @@ React, FastAPI, Node.js, TailwindCSS
 
 **// MLOPS, LLMOPS & CLOUD**
 AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLflow/W&B)`;
-                                // 2. The Audio Summary (Short & Natural)
                                 const audioMsg = "Accessing Technical Inventory. My core stack is built on Python and Gemini for AI, supported by React for frontend, and deployed via Docker and Kubernetes on Cloud infrastructure.";
-
                                 setResponse(visualMsg);
                                 playAudioResponse(audioMsg);
                             }} />
                             <ToolButton icon={Download} label="RESUME" onClick={() => window.open('/Satish_R_Singh_Group_Lead_Data_Scientist.pdf', '_blank')} className="text-power border-power" />
                         </div>
 
-                        {/* 3. THE CONSOLE WINDOW - HEIGHT REDUCED TO 300px */}
+                        {/* 3. THE CONSOLE WINDOW */}
                         <div className="flex flex-col mt-4 shadow-hard border-3 border-black bg-black h-[220px] md:h-[300px] relative">
 
-                            {/* TERMINAL HEADER - RESPONSIVE & FIXED */}
+                            {/* TERMINAL HEADER */}
                             <div className="flex items-center justify-between px-3 py-2 bg-gray-900 border-b border-gray-800 shrink-0">
-
-                                {/* LEFT: Status (Uses your existing 'systemState') */}
                                 <div className="flex items-center gap-2">
-                                    <div className={`w-2 h-2 rounded-full ${systemState === 'IDLE' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></div>
+                                    <div className={`w-2 h-2 rounded-full ${displayState === 'IDLE' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></div>
                                     <span className="font-mono text-[10px] md:text-xs text-gray-400 font-bold uppercase">
                                         <span className="hidden md:inline">SYSTEM_STATUS: </span>
-                                        {systemState}
+                                        {displayState}
                                     </span>
                                 </div>
 
-                                {/* RIGHT: Controls */}
                                 <div className="flex items-center gap-3">
-
-                                    {/* Audio Toggle (Uses your existing 'toggleAudio' and 'isAudioOn') */}
                                     <button
                                         onClick={toggleAudio}
                                         className={`flex items-center gap-1.5 transition-colors ${isAudioOn ? 'text-power' : 'text-gray-500 hover:text-white'}`}
@@ -355,7 +185,6 @@ AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLfl
                                         </span>
                                     </button>
 
-                                    {/* Clear Button (Uses your existing 'handleClear') */}
                                     <button
                                         onClick={handleClear}
                                         className="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1.5"
@@ -367,13 +196,11 @@ AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLfl
                                         </span>
                                     </button>
 
-                                    {/* Decorative Dots */}
                                     <div className="flex gap-1.5 ml-1 border-l border-gray-700 pl-3">
                                         <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
                                         <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
                                         <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
                                     </div>
-
                                 </div>
                             </div>
 
@@ -451,7 +278,7 @@ AWS, Azure, LangSmith, Docker, Kubernetes, CI/CD, Git, Model Observability (MLfl
     );
 };
 
-// ToolButton uses h-12 to match the new search bar height
+// ToolButton component
 const ToolButton: React.FC<{ icon: any; label: string; onClick: () => void; className?: string }> = ({ icon: Icon, label, onClick, className = '' }) => (
     <button
         onClick={onClick}
