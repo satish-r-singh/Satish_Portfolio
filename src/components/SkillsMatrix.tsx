@@ -1,8 +1,6 @@
-
-
 import React, { useState } from 'react';
 import { SectionDivider } from './SectionDivider';
-import { Terminal, Cpu, Database, Cloud, Layout, Users, Radar, Share2, Info } from 'lucide-react';
+import { Terminal, Cpu, Database, Cloud, Users, Radar, Share2, Info, Server } from 'lucide-react';
 
 // --- TYPES & DATA ---
 interface Spec {
@@ -19,44 +17,47 @@ export const SkillsMatrix: React.FC = () => {
 
   const specs: Spec[] = [
     {
-      category: "A.I. & GENERATIVE CORE",
+      category: "GENERATIVE AI & AGENTS",
       icon: Terminal,
       status: "PRIMARY FOCUS",
-      score: 98,
-      tools: ["RAG Pipelines", "LangChain", "Vector DBs", "Gemini API", "Agents"],
-      details: "Architecting autonomous reasoning systems and high-accuracy retrieval engines."
+      score: 99,
+      tools: ["Agentic Workflows", "RAG Pipelines", "LangChain", "Gemini API", "OpenAI API", "Claude API", "Pinecone"],
+      details: "Architecting autonomous reasoning systems, multi-modal retrieval engines, and digital twins."
     },
     {
-      category: "DATA SCIENCE",
+      category: "DATA SCIENCE & ML/DL", // <--- RENAMED
+      icon: Cpu,
+      status: "CORE MATHEMATICS",
+      score: 93,
+      // Focus on the Models & Algorithms
+      tools: ["PyTorch", "XGBoost", "DeepAR", "Computer Vision", "Causal Inference", "Pandas"],
+      details: "Deep learning architectures (CNNs/Transformers) and statistical modeling for predictive intelligence."
+    },
+    {
+      category: "BIG DATA & MLOPS",
       icon: Database,
-      status: "15 YEARS EXP",
-      score: 90,
-      tools: ["Python", "XGBoost", "Pandas", "Scikit-Learn", "Computer Vision", "SQL"],
-      details: "Building predictive models for pricing, fraud detection, and demand forecasting."
-    },
-    {
-      category: "CLOUD ENGINEERING",
-      icon: Cloud,
-      status: "PRODUCTION READY",
-      score: 85,
-      tools: ["Azure", "Docker", "Kubernetes", "FastAPI", "Postgres", "CI/CD"],
-      details: "Full-cycle MLOps: From local notebooks to scalable cloud deployments."
-    },
-    {
-      category: "FULL STACK WEB",
-      icon: Layout,
-      status: "INTERFACE",
+      status: "PIPELINE OPS",
       score: 75,
-      tools: ["React", "TypeScript", "Tailwind", "Streamlit", "Node.js"],
-      details: "Building interactive front-ends to make AI accessible to non-technical users."
+      // Focus on Moving & Processing Data
+      tools: ["Apache Spark", "Databricks", "Airflow", "MLflow", "ETL/ELT"],
+      details: "Scaling data processing from local notebooks to distributed clusters. Managing model lifecycles."
     },
     {
-      category: "LEADERSHIP",
+      category: "CLOUD ARCHITECTURE", // <--- NEW SECTION
+      icon: Cloud,
+      status: "INFRASTRUCTURE",
+      score: 70,
+      // Focus on the Environment & Containers
+      tools: ["Azure", "AWS", "Docker", "Kubernetes", 'Lambdas', 'Serverless', 'Sagemaker'],
+      details: "Designing secure, scalable cloud environments. Implementing containerization and Infrastructure as Code."
+    },
+    {
+      category: "STRATEGIC LEADERSHIP",
       icon: Users,
       status: "MANAGEMENT",
-      score: 80,
-      tools: ["Team Building", "Strategy", "Roadmapping", "Mentoring", "Agile"],
-      details: "Leading data teams and aligning technical execution with business revenue goals."
+      score: 92,
+      tools: ["Tech Mentorship", "Team Scaling", "Roadmapping", "Stakeholder Mgmt", "Agile"],
+      details: "Bridging the gap between technical execution and business revenue. Growing junior talent into senior roles."
     }
   ];
 
@@ -64,7 +65,7 @@ export const SkillsMatrix: React.FC = () => {
     <section id="skills" className="w-full pt-12 pb-24 bg-white border-b-3 border-black">
       <SectionDivider title="[ SYSTEM_SPECIFICATIONS ]" />
 
-      {/* VIEW TOGGLE CONTROLS - Responsive Fix */}
+      {/* VIEW TOGGLE CONTROLS */}
       <div className="max-w-6xl mx-auto px-6 mt-8 flex flex-wrap justify-center md:justify-end gap-2">
         <button
           onClick={() => setActiveView('list')}
@@ -88,7 +89,7 @@ export const SkillsMatrix: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-6 md:px-12 mt-8">
 
-        {/* --- VIEW 1: THE LIST (Original) --- */}
+        {/* --- VIEW 1: THE LIST --- */}
         {activeView === 'list' && (
           <div className="border-3 border-black bg-white shadow-hard animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="bg-black text-white p-3 md:p-4 flex items-center justify-between border-b-3 border-black gap-2">
@@ -135,7 +136,7 @@ export const SkillsMatrix: React.FC = () => {
           </div>
         )}
 
-        {/* --- VIEW 2: RADAR CHART (Enhanced HUD) --- */}
+        {/* --- VIEW 2: RADAR CHART --- */}
         {activeView === 'radar' && (
           <div className="w-full h-[600px] border-3 border-black bg-white shadow-hard flex items-center justify-center relative overflow-hidden animate-in zoom-in duration-300">
             <div className="absolute top-4 left-4 bg-power px-2 py-1 font-mono text-xs font-bold uppercase border-2 border-black z-10">
@@ -149,7 +150,7 @@ export const SkillsMatrix: React.FC = () => {
           </div>
         )}
 
-        {/* --- VIEW 3: FORCE GRAPH (Detailed Planetary System) --- */}
+        {/* --- VIEW 3: FORCE GRAPH --- */}
         {activeView === 'network' && (
           <div className="w-full h-[600px] border-3 border-black bg-gray-50 shadow-hard flex items-center justify-center relative overflow-hidden animate-in zoom-in duration-300">
             <div className="absolute top-4 left-4 bg-black text-white px-2 py-1 font-mono text-xs font-bold uppercase z-10">
@@ -166,9 +167,9 @@ export const SkillsMatrix: React.FC = () => {
 
 // --- COMPONENT: DETAILED RADAR ---
 const RadarChart = ({ data }: { data: Spec[] }) => {
-  const size = 500; // Increased size
+  const size = 500;
   const center = size / 2;
-  const radius = 160; // Increased radius
+  const radius = 160;
   const angleStep = (Math.PI * 2) / data.length;
 
   const getPoint = (score: number, index: number) => {
@@ -187,7 +188,7 @@ const RadarChart = ({ data }: { data: Spec[] }) => {
 
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
-      {/* Background Grid Circles */}
+      {/* Background Grid */}
       {[0.25, 0.5, 0.75, 1].map((scale, i) => (
         <circle
           key={i}
@@ -196,21 +197,19 @@ const RadarChart = ({ data }: { data: Spec[] }) => {
         />
       ))}
 
-      {/* Axes Lines */}
+      {/* Axes */}
       {data.map((_, i) => {
-        const p = getPoint(110, i); // Extend slightly past 100%
+        const p = getPoint(110, i);
         return <line key={i} x1={center} y1={center} x2={p.x} y2={p.y} stroke="#d1d5db" strokeWidth="1" />;
       })}
 
-      {/* Data Area */}
+      {/* Data Polygon */}
       <polygon points={pathPoints} fill="rgba(255, 69, 0, 0.1)" stroke="#FF4500" strokeWidth="3" />
 
-      {/* Data Points & Rich Labels */}
+      {/* Points & Labels */}
       {data.map((d, i) => {
         const p = getPoint(100, i);
         const pointP = getPoint(d.score, i);
-
-        // Alignment Logic
         const isLeft = p.x < center;
         const isTop = p.y < center;
         const textAnchor = isLeft ? "end" : "start";
@@ -219,28 +218,16 @@ const RadarChart = ({ data }: { data: Spec[] }) => {
 
         return (
           <g key={i} className="group cursor-pointer">
-            {/* The Value Dot */}
             <circle cx={pointP.x} cy={pointP.y} r="5" fill="black" stroke="white" strokeWidth="2" className="group-hover:fill-power transition-colors" />
 
-            {/* Category Label (Big) */}
-            <text
-              x={p.x + xOffset}
-              y={p.y + yOffset}
-              textAnchor={textAnchor}
-              className="text-[12px] font-black uppercase fill-black"
-            >
+            {/* Category */}
+            <text x={p.x + xOffset} y={p.y + yOffset} textAnchor={textAnchor} className="text-[12px] font-black uppercase fill-black">
               {d.category}
             </text>
 
-            {/* Tools List (Small, Detailed) */}
+            {/* Micro Tools List */}
             {d.tools.slice(0, 3).map((tool, idx) => (
-              <text
-                key={idx}
-                x={p.x + xOffset}
-                y={p.y + yOffset + 14 + (idx * 10)}
-                textAnchor={textAnchor}
-                className="text-[9px] font-mono font-medium fill-gray-500 uppercase"
-              >
+              <text key={idx} x={p.x + xOffset} y={p.y + yOffset + 14 + (idx * 10)} textAnchor={textAnchor} className="text-[9px] font-mono font-medium fill-gray-500 uppercase">
                 + {tool}
               </text>
             ))}
@@ -251,24 +238,20 @@ const RadarChart = ({ data }: { data: Spec[] }) => {
   );
 };
 
-// --- COMPONENT: DETAILED PLANETARY SYSTEM ---
+// --- COMPONENT: PLANETARY SYSTEM ---
 const NetworkGraph = ({ specs }: { specs: Spec[] }) => {
-  // We calculate a static "Solar System" layout
   const width = 600;
   const height = 600;
   const center = { x: width / 2, y: height / 2 };
-
-  // Config
   const orbitRadiusCategory = 140;
-  const orbitRadiusTools = 60; // Distance from category
 
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`}>
-      {/* Center Sun: YOU */}
+      {/* Central Node */}
       <circle cx={center.x} cy={center.y} r="40" fill="black" />
       <text x={center.x} y={center.y} dy="5" textAnchor="middle" fill="white" className="font-black text-sm tracking-widest">SATISH</text>
 
-      {/* Orbital Rings (Visual Guide) */}
+      {/* Orbit Guide */}
       <circle cx={center.x} cy={center.y} r={orbitRadiusCategory} fill="none" stroke="#e5e7eb" strokeWidth="1" strokeDasharray="5 5" />
 
       {/* Categories */}
@@ -279,37 +262,28 @@ const NetworkGraph = ({ specs }: { specs: Spec[] }) => {
 
         return (
           <g key={i}>
-            {/* Link to Center */}
             <line x1={center.x} y1={center.y} x2={catX} y2={catY} stroke="#e5e7eb" strokeWidth="2" />
-
-            {/* Category Planet */}
             <circle cx={catX} cy={catY} r="25" fill="#FF4500" stroke="white" strokeWidth="3" className="shadow-lg" />
-            <text x={catX} y={catY} dy="35" textAnchor="middle" className="font-bold text-[10px] uppercase fill-black bg-white">{cat.category.split(' ')[0]}</text>
+            <text x={catX} y={catY} dy="35" textAnchor="middle" className="font-bold text-[10px] uppercase fill-black bg-white px-1">
+              {cat.category.split(' ')[0]}
+            </text>
 
-            {/* Tool Moons */}
+            {/* Tool Satellites */}
             {cat.tools.map((tool, j) => {
-              // Spread tools in a semi-circle around the category, facing away from center
               const toolAngle = angle + ((j - cat.tools.length / 2 + 0.5) * 0.5);
-              const toolDist = 70 + (j % 2) * 20; // Stagger distance slightly
-
+              const toolDist = 70 + (j % 2) * 20;
               const toolX = catX + toolDist * Math.cos(toolAngle);
               const toolY = catY + toolDist * Math.sin(toolAngle);
 
               return (
                 <g key={tool}>
                   <line x1={catX} y1={catY} x2={toolX} y2={toolY} stroke="#cbd5e1" strokeWidth="1" />
-
-                  {/* Tool Node */}
                   <circle cx={toolX} cy={toolY} r="4" fill="white" stroke="black" strokeWidth="2" />
-
-                  {/* Tool Label */}
                   <text
-                    x={toolX}
-                    y={toolY}
-                    dx={toolX > center.x ? 8 : -8}
-                    dy="3"
+                    x={toolX} y={toolY}
+                    dx={toolX > center.x ? 8 : -8} dy="3"
                     textAnchor={toolX > center.x ? "start" : "end"}
-                    className="font-mono text-[9px] font-bold uppercase fill-gray-600 hover:fill-black cursor-default transition-colors"
+                    className="font-mono text-[9px] font-bold uppercase fill-gray-600"
                   >
                     {tool}
                   </text>
