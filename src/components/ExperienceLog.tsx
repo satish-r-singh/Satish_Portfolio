@@ -1,5 +1,5 @@
 import React from 'react';
-import { EXPERIENCE } from '../constants';
+import { EXPERIENCE, ARTIFACTS } from '../constants';
 import { SectionDivider } from './SectionDivider';
 
 export const ExperienceLog: React.FC = () => {
@@ -12,128 +12,77 @@ export const ExperienceLog: React.FC = () => {
           {/* The Timeline Backbone */}
           <div className="relative border-l-3 border-black space-y-12 pb-4">
 
-            {/* =========================================================
-                ARTIFACT 1: RESEARCH
-               ========================================================= */}
-            <div className="relative pl-12 group">
-              {/* Node */}
-              <div className="absolute top-8 -left-[11px] w-[19px] h-[19px] bg-white border-3 border-black transition-all duration-300 group-hover:scale-125 z-10"></div>
-              {/* Connector */}
-              <div className="absolute top-[41px] left-0 w-12 h-[3px] bg-black"></div>
+            {/* ARTIFACTS: Research & Mentorship - Now data-driven */}
+            {ARTIFACTS.map((artifact) => (
+              <div key={artifact.id} className="relative pl-12 group">
+                {/* Node */}
+                <div className="absolute top-8 -left-[11px] w-[19px] h-[19px] bg-white border-3 border-black transition-all duration-300 group-hover:scale-125 z-10"></div>
+                {/* Connector */}
+                <div className="absolute top-[41px] left-0 w-12 h-[3px] bg-black"></div>
 
-              {/* Card */}
-              <div className="w-full bg-white border-3 border-black shadow-hard transition-all duration-300 group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 relative">
-                <div className="p-[4px] bg-white">
-                  <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5">
+                {/* Card */}
+                <div className="w-full bg-white border-3 border-black shadow-hard transition-all duration-300 group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 relative">
+                  <div className="p-[4px] bg-white">
+                    <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5">
 
-                    {/* Header */}
-                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
-                      <span className="text-black whitespace-nowrap">📄 PUBLISHED_RESEARCH</span>
-                      <span className="text-gray-400">//</span>
-                      <span className="bg-power text-white px-1 whitespace-nowrap">SPRINGER_NATURE</span>
-                    </div>
-
-                    {/* Content */}
-                    <div>
-                      <h3 className="text-2xl md:text-3xl font-black uppercase leading-[0.9] mb-3">
-                        EXPLAINABLE AI (XAI) FRAMEWORK FOR LLM TRANSPARENCY
-                      </h3>
-                      <p className="font-serif italic text-lg text-gray-600">
-                        Proceedings of DaSET 2024.
-                      </p>
-                    </div>
-
-                    {/* Impact */}
-                    <div className="bg-white border-l-4 border-black p-4 font-mono text-sm leading-relaxed text-gray-800">
-                      <span className="font-bold bg-black text-white px-1 mr-2">IMPACT</span>
-                      Implemented SHAP & LIME to solve the 'Black Box' problem in Large Language Models, using Fake News Detection as a case study, establishing a trust framework for generative outputs.
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-2 border-t border-gray-300 mt-2">
-                      <div className="flex flex-wrap gap-2">
-                        {['Applied XAI', 'LLM Trust', 'NLP', 'Research', 'Transparency'].map(tag => (
-                          <span key={tag} className="border border-black bg-white px-2 py-1 text-[10px] font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors cursor-default">
-                            {tag}
-                          </span>
-                        ))}
+                      {/* Header */}
+                      <div className="flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
+                        <span className="text-black whitespace-nowrap">{artifact.icon} {artifact.label}</span>
+                        <span className="text-gray-400">//</span>
+                        <span className={`${artifact.type === 'research' ? 'bg-power' : 'bg-black'} text-white px-1 whitespace-nowrap`}>
+                          {artifact.publisher}
+                        </span>
                       </div>
-                      <a
-                        href="https://link.springer.com/chapter/10.1007/978-981-96-7749-8_31"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-bold font-mono text-xs uppercase bg-black text-white px-4 py-2 hover:bg-power transition-colors flex items-center gap-2"
-                      >
-                        [⬇ READ_ABSTRACT]
-                      </a>
+
+                      {/* Content */}
+                      <div>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase leading-[0.9] mb-3">
+                          {artifact.title}
+                        </h3>
+                        <p className="font-serif italic text-lg text-gray-600 leading-tight">
+                          {artifact.subtitle}
+                        </p>
+                      </div>
+
+                      {/* Impact */}
+                      <div className="bg-white border-l-4 border-black p-4 font-mono text-sm leading-relaxed text-gray-800">
+                        <span className={`font-bold ${artifact.type === 'research' ? 'bg-black' : 'bg-power'} text-white px-1 mr-2`}>
+                          {artifact.impactLabel}
+                        </span>
+                        {artifact.impactText}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-2 border-t border-gray-300 mt-2">
+                        <div className="flex flex-wrap gap-2">
+                          {artifact.tags.map(tag => (
+                            <span key={tag} className="border border-black bg-white px-2 py-1 text-[10px] font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors cursor-default">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        {artifact.link ? (
+                          <a
+                            href={artifact.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-bold font-mono text-xs uppercase bg-black text-white px-4 py-2 hover:bg-power transition-colors flex items-center gap-2"
+                          >
+                            {artifact.linkLabel}
+                          </a>
+                        ) : (
+                          <div className="font-bold font-mono text-xs text-gray-400 uppercase">
+                            [ IMPACT: GLOBAL_REACH ]
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
 
-            {/* =========================================================
-                ARTIFACT 2: EXTERNAL MENTORSHIP (UPDATED)
-               ========================================================= */}
-            <div className="relative pl-12 group">
-
-              {/* Node: White Box */}
-              <div className="absolute top-8 -left-[11px] w-[19px] h-[19px] bg-white border-3 border-black transition-all duration-300 group-hover:scale-125 z-10"></div>
-
-              {/* Connector */}
-              <div className="absolute top-[41px] left-0 w-12 h-[3px] bg-black"></div>
-
-              {/* The Artifact Card */}
-              <div className="w-full bg-white border-3 border-black shadow-hard transition-all duration-300 group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 relative">
-                <div className="p-[4px] bg-white">
-                  <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5">
-
-                    {/* Header */}
-                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
-                      <span className="text-black whitespace-nowrap">🎓 INDUSTRY_EDUCATION</span>
-                      <span className="text-gray-400">//</span>
-                      <span className="bg-black text-white px-1 whitespace-nowrap">VISITING_FACULTY</span>
-                    </div>
-
-                    {/* Main Content */}
-                    <div>
-                      <h3 className="text-2xl md:text-3xl font-black uppercase leading-[0.9] mb-3">
-                        DATA_SCIENCE_MENTORSHIP_&_TRAINING
-                      </h3>
-                      <p className="font-serif italic text-lg text-gray-600 leading-tight">
-                        @ Emirates Institute of Finance, Mindworx, Simplilearn, Vinsys & The Knowledge Academy.
-                      </p>
-                    </div>
-
-                    {/* The Impact Block */}
-                    <div className="bg-white border-l-4 border-black p-4 font-mono text-sm leading-relaxed text-gray-800">
-                      <span className="font-bold bg-power text-white px-1 mr-2">MISSION</span>
-                      Upskilled aspiring data professionals by delivering comprehensive curricula on Advanced ML and AI. Bridged the gap between academic theory and industry application through hands-on projects and real-world case studies.
-                    </div>
-
-                    {/* Footer: Tags */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-2 border-t border-gray-300 mt-2">
-                      <div className="flex flex-wrap gap-2">
-                        {['Curriculum_Dev', 'Corporate_Training', 'Advanced_ML', 'Career_Coaching'].map(tag => (
-                          <span key={tag} className="border border-black bg-white px-2 py-1 text-[10px] font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors cursor-default">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="font-bold font-mono text-xs text-gray-400 uppercase">
-                        [ IMPACT: GLOBAL_REACH ]
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* =========================================================
-                STANDARD EXPERIENCE LOG
-               ========================================================= */}
+            {/* STANDARD EXPERIENCE LOG */}
             {EXPERIENCE.map((exp) => (
               <div key={exp.id} className="relative pl-12 group">
 

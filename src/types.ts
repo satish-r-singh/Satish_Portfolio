@@ -21,6 +21,30 @@ export interface Experience {
   metric: string;
 }
 
+export interface Skill {
+  id: string;
+  category: string;
+  status: string;
+  score: number;
+  tools: string[];
+  details: string;
+}
+
+export interface Artifact {
+  id: string;
+  type: 'research' | 'mentorship';
+  icon: string;
+  label: string;
+  publisher?: string;
+  title: string;
+  subtitle: string;
+  impactLabel: string;
+  impactText: string;
+  tags: string[];
+  link?: string;
+  linkLabel?: string;
+}
+
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;

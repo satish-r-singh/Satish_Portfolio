@@ -1,4 +1,4 @@
-import { Project, Experience } from './types';
+import { Project, Experience, Skill, Artifact } from './types';
 
 // =============================================================================
 //  PROJECTS: THE CASE FILES
@@ -249,6 +249,82 @@ export const EXPERIENCE = [
   }
 ];
 
+// =============================================================================
+//  SKILLS: SYSTEM SPECIFICATIONS
+// =============================================================================
+export const SKILLS: Skill[] = [
+  {
+    id: 'genai-agents',
+    category: "GENERATIVE AI & AGENTS",
+    status: "PRIMARY FOCUS",
+    score: 99,
+    tools: ["Agentic Workflows", "RAG Pipelines", "LangChain", "Gemini API", "OpenAI API", "Claude API", "Pinecone"],
+    details: "Architecting autonomous reasoning systems, multi-modal retrieval engines, and digital twins."
+  },
+  {
+    id: 'data-science-ml',
+    category: "DATA SCIENCE & ML/DL",
+    status: "CORE MATHEMATICS",
+    score: 93,
+    tools: ["PyTorch", "XGBoost", "DeepAR", "Computer Vision", "Causal Inference", "Pandas"],
+    details: "Deep learning architectures (CNNs/Transformers) and statistical modeling for predictive intelligence."
+  },
+  {
+    id: 'big-data-mlops',
+    category: "BIG DATA & MLOPS",
+    status: "PIPELINE OPS",
+    score: 75,
+    tools: ["Apache Spark", "Databricks", "Airflow", "MLflow", "ETL/ELT"],
+    details: "Scaling data processing from local notebooks to distributed clusters. Managing model lifecycles."
+  },
+  {
+    id: 'cloud-architecture',
+    category: "CLOUD ARCHITECTURE",
+    status: "INFRASTRUCTURE",
+    score: 70,
+    tools: ["Azure", "AWS", "Docker", "Kubernetes", "Lambdas", "Serverless", "Sagemaker"],
+    details: "Designing secure, scalable cloud environments. Implementing containerization and Infrastructure as Code."
+  },
+  {
+    id: 'strategic-leadership',
+    category: "STRATEGIC LEADERSHIP",
+    status: "MANAGEMENT",
+    score: 92,
+    tools: ["Tech Mentorship", "Team Scaling", "Roadmapping", "Stakeholder Mgmt", "Agile"],
+    details: "Bridging the gap between technical execution and business revenue. Growing junior talent into senior roles."
+  }
+];
 
+// =============================================================================
+//  ARTIFACTS: RESEARCH & MENTORSHIP
+// =============================================================================
+export const ARTIFACTS: Artifact[] = [
+  {
+    id: 'xai-research',
+    type: 'research',
+    icon: '📄',
+    label: 'PUBLISHED_RESEARCH',
+    publisher: 'SPRINGER_NATURE',
+    title: 'EXPLAINABLE AI (XAI) FRAMEWORK FOR LLM TRANSPARENCY',
+    subtitle: 'Proceedings of DaSET 2024.',
+    impactLabel: 'IMPACT',
+    impactText: "Implemented SHAP & LIME to solve the 'Black Box' problem in Large Language Models, using Fake News Detection as a case study, establishing a trust framework for generative outputs.",
+    tags: ['Applied XAI', 'LLM Trust', 'NLP', 'Research', 'Transparency'],
+    link: 'https://link.springer.com/chapter/10.1007/978-981-96-7749-8_31',
+    linkLabel: '[⬇ READ_ABSTRACT]'
+  },
+  {
+    id: 'mentorship',
+    type: 'mentorship',
+    icon: '🎓',
+    label: 'INDUSTRY_EDUCATION',
+    publisher: 'VISITING_FACULTY',
+    title: 'DATA_SCIENCE_MENTORSHIP_&_TRAINING',
+    subtitle: '@ Emirates Institute of Finance, Mindworx, Simplilearn, Vinsys & The Knowledge Academy.',
+    impactLabel: 'MISSION',
+    impactText: 'Upskilled aspiring data professionals by delivering comprehensive curricula on Advanced ML and AI. Bridged the gap between academic theory and industry application through hands-on projects and real-world case studies.',
+    tags: ['Curriculum_Dev', 'Corporate_Training', 'Advanced_ML', 'Career_Coaching']
+  }
+];
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";

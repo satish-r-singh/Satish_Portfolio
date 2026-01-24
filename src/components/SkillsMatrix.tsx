@@ -1,65 +1,32 @@
 import React, { useState } from 'react';
 import { SectionDivider } from './SectionDivider';
-import { Terminal, Cpu, Database, Cloud, Users, Radar, Share2, Info, Server } from 'lucide-react';
+import { Terminal, Cpu, Database, Cloud, Users, Radar, Share2, Info } from 'lucide-react';
+import { SKILLS } from '../constants';
+import { Skill } from '../types';
 
-// --- TYPES & DATA ---
-interface Spec {
-  category: string;
-  icon: any;
-  status: string;
-  score: number;
-  tools: string[];
-  details: string;
+// Icon mapping - icons can't be stored in constants, so we map them here
+const SKILL_ICONS: Record<string, React.ComponentType<any>> = {
+  'genai-agents': Terminal,
+  'data-science-ml': Cpu,
+  'big-data-mlops': Database,
+  'cloud-architecture': Cloud,
+  'strategic-leadership': Users
+};
+
+// Extended type for rendering that includes the icon component
+interface SkillWithIcon extends Skill {
+  icon: React.ComponentType<any>;
 }
 
 export const SkillsMatrix: React.FC = () => {
   const [activeView, setActiveView] = useState<'list' | 'radar' | 'network'>('list');
 
-  const specs: Spec[] = [
-    {
-      category: "GENERATIVE AI & AGENTS",
-      icon: Terminal,
-      status: "PRIMARY FOCUS",
-      score: 99,
-      tools: ["Agentic Workflows", "RAG Pipelines", "LangChain", "Gemini API", "OpenAI API", "Claude API", "Pinecone"],
-      details: "Architecting autonomous reasoning systems, multi-modal retrieval engines, and digital twins."
-    },
-    {
-      category: "DATA SCIENCE & ML/DL", // <--- RENAMED
-      icon: Cpu,
-      status: "CORE MATHEMATICS",
-      score: 93,
-      // Focus on the Models & Algorithms
-      tools: ["PyTorch", "XGBoost", "DeepAR", "Computer Vision", "Causal Inference", "Pandas"],
-      details: "Deep learning architectures (CNNs/Transformers) and statistical modeling for predictive intelligence."
-    },
-    {
-      category: "BIG DATA & MLOPS",
-      icon: Database,
-      status: "PIPELINE OPS",
-      score: 75,
-      // Focus on Moving & Processing Data
-      tools: ["Apache Spark", "Databricks", "Airflow", "MLflow", "ETL/ELT"],
-      details: "Scaling data processing from local notebooks to distributed clusters. Managing model lifecycles."
-    },
-    {
-      category: "CLOUD ARCHITECTURE", // <--- NEW SECTION
-      icon: Cloud,
-      status: "INFRASTRUCTURE",
-      score: 70,
-      // Focus on the Environment & Containers
-      tools: ["Azure", "AWS", "Docker", "Kubernetes", 'Lambdas', 'Serverless', 'Sagemaker'],
-      details: "Designing secure, scalable cloud environments. Implementing containerization and Infrastructure as Code."
-    },
-    {
-      category: "STRATEGIC LEADERSHIP",
-      icon: Users,
-      status: "MANAGEMENT",
-      score: 92,
-      tools: ["Tech Mentorship", "Team Scaling", "Roadmapping", "Stakeholder Mgmt", "Agile"],
-      details: "Bridging the gap between technical execution and business revenue. Growing junior talent into senior roles."
-    }
-  ];
+  // Map skills with their corresponding icons
+  const specs: SkillWithIcon[] = SKILLS.map(skill => ({
+    ...skill,
+    icon: SKILL_ICONS[skill.id] || Terminal
+  }));
+
 
   return (
     <section id="skills" className="w-full pt-12 pb-24 bg-white border-b-3 border-black">
@@ -166,7 +133,7 @@ export const SkillsMatrix: React.FC = () => {
 };
 
 // --- COMPONENT: DETAILED RADAR ---
-const RadarChart = ({ data }: { data: Spec[] }) => {
+const RadarChart = ({ data }: { data: SkillWithIcon[] }) => {
   const size = 500;
   const center = size / 2;
   const radius = 160;
@@ -239,7 +206,7 @@ const RadarChart = ({ data }: { data: Spec[] }) => {
 };
 
 // --- COMPONENT: PLANETARY SYSTEM ---
-const NetworkGraph = ({ specs }: { specs: Spec[] }) => {
+const NetworkGraph = ({ specs }: { specs: SkillWithIcon[] }) => {
   const width = 600;
   const height = 600;
   const center = { x: width / 2, y: height / 2 };
