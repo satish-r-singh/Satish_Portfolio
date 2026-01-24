@@ -21,13 +21,6 @@ export interface Experience {
   metric: string;
 }
 
-export interface ArchiveProject {
-  date: string;
-  id: string;
-  stack: string[];
-  link: string;
-}
-
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;

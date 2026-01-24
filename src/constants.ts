@@ -1,4 +1,4 @@
-import { Project, Experience, ArchiveProject } from './types';
+import { Project, Experience } from './types';
 
 // =============================================================================
 //  PROJECTS: THE CASE FILES
@@ -200,7 +200,7 @@ export const PROJECTS = [
 // =============================================================================
 export const EXPERIENCE = [
   {
-    id: 1,
+    id: 'lead-ds-ecentive',
     year: "2022 - PRESENT",
     role: "GROUP LEAD DATA SCIENTIST",
     company: "E-CENTIVE & IGNITE",
@@ -208,7 +208,7 @@ export const EXPERIENCE = [
     metric: "Built the Data Science division from scratch. Deployed GenAI Voice Agents & RAG Knowledge Assistants, reducing Call Center TTR by 20%."
   },
   {
-    id: 2,
+    id: 'senior-ds-zensar',
     year: "2021 - 2022",
     role: "SENIOR DATA SCIENTIST",
     company: "ZENSAR TECHNOLOGIES",
@@ -216,14 +216,13 @@ export const EXPERIENCE = [
     metric: "Developed Used Car Pricing Engines (XGBoost) for Avis Fleet. Increased revenue per unit by 10% and reduced financial forecasting errors by 12%."
   },
   {
-    id: 3,
+    id: 'tpo-avis',
     year: "2019 - 2021",
     role: "TECH PRODUCT OWNER (DS)",
     company: "AVIS FLEET",
     location: "JOHANNESBURG",
     metric: "Launched AI Vehicle Damage Detection (Computer Vision/Azure). Automated claims processing, reducing settlement time by 4 days and saving $200k/year."
   },
-  // --- NEW ROLE 1 ---
   {
     id: 'data-engineer-avis',
     year: 'JAN 2018 - JUN 2018',
@@ -232,7 +231,6 @@ export const EXPERIENCE = [
     location: 'JOHANNESBURG',
     metric: 'Engineered Big Data pipelines on Azure Spark. Delivered a Predictive Maintenance POC that validated the feasibility of fleet telemetry analytics.'
   },
-  // --- NEW ROLE 2 ---
   {
     id: 'tech-specialist-avis',
     year: 'JUL 2016 - DEC 2017',
@@ -242,7 +240,7 @@ export const EXPERIENCE = [
     metric: 'Co-led the AS/400 to Azure modernization. Managed a team of 60+ consultants to rewrite legacy leasing systems into a modern SaaS platform.'
   },
   {
-    id: 4,
+    id: 'senior-swe-galaxe',
     year: "2010 - 2014",
     role: "SENIOR SOFTWARE ENGINEER",
     company: "GALAXE SOLUTIONS & IBM INDIA",
