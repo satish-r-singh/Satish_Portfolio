@@ -14,8 +14,8 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
     if (!isOpen || !project) return null;
 
     return (
-        // Z-Index 99999 ensures it sits above everything.
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        // Outer wrapper: overflow-hidden prevents ANY bleed on mobile
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 overflow-hidden">
 
             {/* Backdrop */}
             <div
@@ -31,11 +31,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
       */}
             <div
                 className="relative bg-white border-3 border-black 
-        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] 
-        flex flex-col 
-        w-full max-w-[90vw] md:max-w-5xl 
-        max-h-[85dvh] md:h-[85vh]
-        overflow-hidden"
+                    shadow-none sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] 
+                    flex flex-col 
+                    w-full max-w-[calc(100vw-16px)] sm:max-w-[90vw] md:max-w-5xl 
+                    max-h-[calc(100vh-16px)] sm:max-h-[85dvh] md:h-[85vh]
+                    overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
             >
 
@@ -55,7 +55,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                 </div>
 
                 {/* --- SCROLLABLE CONTENT --- */}
-                <div className="flex flex-col md:flex-row flex-grow overflow-y-auto md:overflow-hidden">
+                <div className="flex flex-col md:flex-row flex-grow overflow-y-auto overflow-x-hidden md:overflow-hidden">
 
                     {/* === LEFT COLUMN: VISUALS === */}
                     <div className="w-full md:w-1/3 bg-gray-50 border-b-3 md:border-b-0 md:border-r-3 border-black p-4 md:p-6 flex flex-col gap-4 md:gap-6 shrink-0 md:overflow-y-auto">
@@ -79,8 +79,8 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                         {/* Domain Tags - FORCED WRAPPING FIX */}
                         <div className="w-full">
                             <h3 className="font-mono text-xs font-bold text-gray-500 uppercase mb-2">[ DOMAIN ]</h3>
-                            <div className="bg-black text-white px-2 py-1 w-fit max-w-full box-border">
-                                <p className="font-bold text-xs md:text-lg break-words whitespace-normal leading-snug">
+                            <div className="bg-black text-white px-2 py-1 inline-block max-w-full">
+                                <p className="font-bold text-xs md:text-lg break-all whitespace-normal leading-snug">
                                     {project.category}
                                 </p>
                             </div>
