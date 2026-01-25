@@ -23,7 +23,7 @@ export const ExperienceLog: React.FC = () => {
                 {/* Card */}
                 <div className="w-full bg-white border-3 border-black shadow-hard transition-all duration-300 group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 relative">
                   <div className="p-[4px] bg-white">
-                    <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5">
+                    <div className="border border-black bg-[#F3F4F6] p-6 md:p-8 flex flex-col gap-5 overflow-hidden">
 
                       {/* Header */}
                       <div className="flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-300 pb-3">
@@ -36,7 +36,7 @@ export const ExperienceLog: React.FC = () => {
 
                       {/* Content */}
                       <div>
-                        <h3 className="text-2xl md:text-3xl font-black uppercase leading-[0.9] mb-3">
+                        <h3 className="text-xl md:text-3xl font-black uppercase leading-[0.9] mb-3 break-words max-w-full">
                           {artifact.title}
                         </h3>
                         <p className="font-serif italic text-lg text-gray-600 leading-tight">
