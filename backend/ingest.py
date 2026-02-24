@@ -36,9 +36,11 @@ def ingest_data():
     docs = text_splitter.split_documents(raw_docs)
     print(f"   Split into {len(docs)} vector chunks.")
 
-    # 4. Initialize Embeddings (Switched to newer model)
+    # 4. Initialize Embeddings
+    # text-embedding-004 deprecated Feb 2026. gemini-embedding-001 is the replacement.
+    # gemini-embedding-001 outputs 3072 dimensions (vs 768 for text-embedding-004).
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004", # <--- NEWER MODEL
+        model="models/gemini-embedding-001",
         google_api_key=GOOGLE_KEY
     )
 
@@ -46,15 +48,22 @@ def ingest_data():
     pc = Pinecone(api_key=PINECONE_KEY)
     
     existing_indexes = [i.name for i in pc.list_indexes()]
-    if INDEX_NAME not in existing_indexes:
-        print(f"   Creating Index {INDEX_NAME}...")
-        pc.create_index(
-            name=INDEX_NAME,
-            dimension=768, 
-            metric="cosine",
-            spec=ServerlessSpec(cloud="aws", region="us-east-1")
-        )
-        time.sleep(5) 
+    if INDEX_NAME in existing_indexes:
+        print(f"   Disabling deletion protection on '{INDEX_NAME}'...")
+        pc.configure_index(INDEX_NAME, deletion_protection="disabled")
+        time.sleep(3)
+        print(f"   Deleting old index '{INDEX_NAME}' (dimension mismatch with new model)...")
+        pc.delete_index(INDEX_NAME)
+        time.sleep(10)
+
+    print(f"   Creating Index '{INDEX_NAME}' with dimension=3072 for gemini-embedding-001...")
+    pc.create_index(
+        name=INDEX_NAME,
+        dimension=3072,
+        metric="cosine",
+        spec=ServerlessSpec(cloud="aws", region="us-east-1")
+    )
+    time.sleep(5)
 
     index = pc.Index(INDEX_NAME)
 

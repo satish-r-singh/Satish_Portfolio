@@ -26,6 +26,7 @@ from pinecone import Pinecone
 from google import genai
 from google.genai import types
 
+
 # --- LOCAL PROMPTS ---
 from prompts import get_chat_prompt, get_jd_analysis_prompt
 
@@ -46,8 +47,10 @@ if not GOOGLE_API_KEY or not PINECONE_API_KEY:
 # ---------------------------------------------------------
 
 # A. Embedding Model
+# text-embedding-004 was deprecated Feb 2026. gemini-embedding-001 is the replacement
+# and works on v1beta (no API version switch needed).
 embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/text-embedding-004", 
+    model="models/gemini-embedding-001",
     google_api_key=GOOGLE_API_KEY
 )
 
@@ -165,7 +168,7 @@ async def chat_endpoint(request: Request, chat_request: ChatRequest):
         return {"response": ai_response.content, "action": "reply"}
 
     except Exception as e:
-        logger.error(f"Chat error: {str(e)}")
+        logger.error(f"Chat error: {str(e)}", exc_info=True)
         return {"response": "⚠️ System Error. Please try again later."}
 
 @app.post("/analyze_jd")
