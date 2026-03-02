@@ -253,7 +253,7 @@ Azure, AWS (Bedrock/SageMaker), Docker, Kubernetes, Terraform, Serverless (Lambd
                     </div>
                     <div className="relative group w-full aspect-square max-w-[350px] mx-auto lg:mx-0">
                         <div className="relative w-full h-full border-3 border-black bg-white grayscale contrast-125 hover:grayscale-0 transition-all duration-500 overflow-hidden shadow-hard">
-                            <img src="/images/satish_profile.png" alt="Satish Rohit Singh" className="w-full h-full object-cover" />
+                            <img src="/images/satish_profile.webp" alt="Satish Rohit Singh" className="w-full h-full object-cover" />
                         </div>
                     </div>
                     <button onClick={() => setIsTechStackOpen(true)} className="w-full max-w-[350px] mx-auto lg:mx-0 mt-4 py-2 border-2 border-black font-mono font-bold text-xs uppercase bg-white hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2 group shadow-hard-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1">

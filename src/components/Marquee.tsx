@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const Marquee: React.FC = () => {
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   const items = [
     "SYSTEM_STATUS: OPERATIONAL",
     "LOCATION: DUBAI-ABU DHABI/UAE",
@@ -8,7 +19,7 @@ export const Marquee: React.FC = () => {
     "SPECIALTY: GEN_AI / RAG / EVALS / LLM_OPS / ML / CV / NLP",
     "LATEST_PUBLICATION: SPRINGER NATURE (2025)",
     "OPEN_TO_WORK: YES",
-    "CURRENT_TIME: " + new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }) + " UTC+4"
+    "CURRENT_TIME: " + currentTime + " UTC+4"
   ];
 
   return (

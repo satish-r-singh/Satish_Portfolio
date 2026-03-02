@@ -5,10 +5,10 @@ python-multipart==0.0.20
 pydantic==2.11.3
 
 
-# AI & LangChain (Loose constraints to fix conflicts)
-langchain>=0.3.0
-langchain-community>=0.3.0
-langchain-google-genai>=2.0.0
+# AI & LangChain (Upper-bounded to prevent breaking changes)
+langchain>=0.3.0,<0.4.0
+langchain-community>=0.3.0,<0.4.0
+langchain-google-genai>=2.0.0,<3.0.0
 google-genai==1.56.0
 
 # Vector Database

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Heart, FileX, Lightbulb, Rocket, MessageSquare, Cpu, AlertTriangle } from 'lucide-react';
 
 interface MotivationModalProps {
@@ -7,6 +7,15 @@ interface MotivationModalProps {
 }
 
 export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClose }) => {
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
+
     if (!isOpen) return null;
 
     const motivations = [
@@ -43,7 +52,7 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
     ];
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label="The motivation behind this page">
             <div className="w-full max-w-6xl bg-white border-3 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[90vh] overflow-hidden relative flex flex-col">
 
                 {/* HEADER - Reversed styling (white on black instead of black on white) */}
@@ -59,6 +68,7 @@ export const MotivationModal: React.FC<MotivationModalProps> = ({ isOpen, onClos
                     </div>
                     <button
                         onClick={onClose}
+                        aria-label="Close modal"
                         className="p-2 border-2 border-black bg-white text-black hover:bg-black hover:text-white hover:scale-110 transition-all duration-200"
                     >
                         <X size={24} strokeWidth={3} />

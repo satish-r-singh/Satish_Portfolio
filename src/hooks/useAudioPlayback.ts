@@ -73,11 +73,17 @@ export const useAudioPlayback = ({
         log('> GENERATING_AUDIO... (this may take up to 20 seconds)');
 
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+
             const res = await fetch(`${API_URL}/tts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text }),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
             if (!res.ok) throw new Error(`Server returned ${res.status}`);
             const blob = await res.blob();
             const audioUrl = URL.createObjectURL(blob);

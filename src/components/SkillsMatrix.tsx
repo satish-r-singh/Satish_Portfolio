@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SectionDivider } from './SectionDivider';
 import { Terminal, Cpu, Database, Cloud, Users, Radar, Share2, Info } from 'lucide-react';
 import { SKILLS } from '../constants';
@@ -21,11 +21,11 @@ interface SkillWithIcon extends Skill {
 export const SkillsMatrix: React.FC = () => {
   const [activeView, setActiveView] = useState<'list' | 'radar' | 'network'>('list');
 
-  // Map skills with their corresponding icons
-  const specs: SkillWithIcon[] = SKILLS.map(skill => ({
+  // Map skills with their corresponding icons (memoized since SKILLS is static)
+  const specs: SkillWithIcon[] = useMemo(() => SKILLS.map(skill => ({
     ...skill,
     icon: SKILL_ICONS[skill.id] || Terminal
-  }));
+  })), []);
 
 
   return (

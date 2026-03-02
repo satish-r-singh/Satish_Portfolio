@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, FileText, Layers, Shield, Cpu, ExternalLink, Image as ImageIcon } from 'lucide-react';
 import { Project } from '../types';
 
@@ -11,11 +11,20 @@ interface ProjectModalProps {
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose }) => {
     const [activeTab, setActiveTab] = useState<'brief' | 'stack'>('brief');
 
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
+
     if (!isOpen || !project) return null;
 
     return (
         // Outer wrapper: overflow-hidden prevents ANY bleed on mobile
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 overflow-hidden">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 overflow-hidden" role="dialog" aria-modal="true" aria-label={`Case file: ${project.title}`}>
 
             {/* Backdrop */}
             <div
@@ -48,6 +57,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                     </div>
                     <button
                         onClick={onClose}
+                        aria-label="Close modal"
                         className="p-1 md:p-2 hover:bg-black hover:text-white transition-colors border-2 border-transparent hover:border-black shrink-0 rounded-sm"
                     >
                         <X size={18} strokeWidth={3} className="md:w-6 md:h-6" />
@@ -66,6 +76,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onC
                                 <img
                                     src={project.image}
                                     alt={project.title}
+                                    loading="lazy"
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
@@ -186,7 +197,7 @@ const RichText: React.FC<{ text: string }> = ({ text }) => {
 };
 
 // 2. Tab Button
-const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
+const TabButton = ({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: React.ComponentType<any>; label: string }) => (
     <button
         onClick={onClick}
         className={`flex-1 py-3 md:py-4 flex items-center justify-center gap-2 font-black text-[10px] md:text-sm uppercase tracking-tight transition-all min-w-[100px]
@@ -200,7 +211,7 @@ const TabButton = ({ active, onClick, icon: Icon, label }: any) => (
 );
 
 // 3. Section Wrapper
-const Section = ({ title, icon: Icon, children }: any) => (
+const Section = ({ title, icon: Icon, children }: { title: string; icon: React.ComponentType<any>; children: React.ReactNode }) => (
     <div>
         <div className="flex items-center gap-2 mb-2 md:mb-3 text-power">
             <Icon size={16} className="md:w-[18px] md:h-[18px]" />

@@ -130,7 +130,7 @@ export const ProjectGrid: React.FC<ProjectGridProps> = ({ filter, setFilter }) =
                 {/* Image */}
                 <div className="w-full h-48 border-b-3 border-black overflow-hidden bg-gray-200 relative">
                   {project.image ? (
-                    <img src={project.image} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                    <img src={project.image} alt={project.title} loading="lazy" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100 group-hover:bg-gray-200 transition-colors">
                       <Layers size={48} className="text-gray-300 group-hover:text-gray-400" />

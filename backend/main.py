@@ -51,7 +51,8 @@ if not GOOGLE_API_KEY or not PINECONE_API_KEY:
 # and works on v1beta (no API version switch needed).
 embeddings = GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001",
-    google_api_key=GOOGLE_API_KEY
+    google_api_key=GOOGLE_API_KEY,
+    timeout=15,
 )
 
 # B. Vector Database
@@ -61,9 +62,10 @@ index = pc.Index(index_name)
 
 # C. The Thinking Brain
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash", 
+    model="gemini-2.5-flash",
     temperature=0.3,
-    google_api_key=GOOGLE_API_KEY
+    google_api_key=GOOGLE_API_KEY,
+    timeout=30,
 )
 
 # D. The Speaking Brain (Cookbook Style)
@@ -71,7 +73,7 @@ client = genai.Client(api_key=GOOGLE_API_KEY)
 
 # E. Context
 try:
-    with open("resume.txt", "r", encoding="utf-8") as f:
+    with open(os.path.join(os.path.dirname(__file__), "resume.txt"), "r", encoding="utf-8") as f:
         RESUME_CONTEXT = f.read()
 except FileNotFoundError:
     RESUME_CONTEXT = "Profile: Satish Rohit Singh (Lead Data Scientist)."
@@ -86,15 +88,14 @@ limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS Origins List
-origins = [
-    "http://localhost:3000",           # Vite Localhost
-    "http://192.168.70.143:3000",      # Local Network IP
-    "https://your-project.pages.dev",  # Your Cloudflare Domain (Add this later)
-    "https://satish-portfolio-1at.pages.dev", # Example - Remove this later
+# CORS Origins List (configurable via env var, comma-separated)
+_default_origins = [
+    "http://localhost:3000",
     "https://www.satishrohitsingh.com",
     "https://satishrohitsingh.com",
 ]
+_env_origins = os.getenv("ALLOWED_ORIGINS", "")
+origins = [o.strip() for o in _env_origins.split(",") if o.strip()] if _env_origins else _default_origins
 
 class ChatRequest(BaseModel):
     message: str
@@ -113,6 +114,8 @@ async def add_security_headers(request: Request, call_next):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     return response
 
 # CORS Middleware - MUST be added AFTER other middleware for correct order
@@ -177,23 +180,21 @@ async def analyze_jd(request: Request, file: UploadFile = File(...)):
     # FILE SIZE CHECK (Limit to 5MB)
     MAX_FILE_SIZE = 5 * 1024 * 1024
 
-    # Validate file type
-    if file.content_type != "application/pdf":
-        return {"response": "⚠️ Only PDF files are accepted."}
-    
     # Check content-length header first (fast)
     if file.size and file.size > MAX_FILE_SIZE:
         return {"response": "⚠️ File too large. Max 5MB allowed."}
     try:
         content = await file.read()
-        
+
         # Double check actual size after reading
         if len(content) > MAX_FILE_SIZE:
              return {"response": "⚠️ File too large. Max 5MB allowed."}
-        
-        # RUN BLOCKING PDF PARSING IN THREAD POOL
+
+        # Validate PDF by attempting to parse (catches spoofed content_type)
         def parse_pdf(file_bytes):
             reader = PdfReader(io.BytesIO(file_bytes))
+            if len(reader.pages) == 0:
+                raise ValueError("Empty PDF")
             # Extract text safely
             return "".join([page.extract_text() or "" for page in reader.pages])[:30000]
 
@@ -205,7 +206,8 @@ async def analyze_jd(request: Request, file: UploadFile = File(...)):
         response = await llm.ainvoke(prompt) # Use async invoke if available, otherwise standard invoke is okay in thread
         return {"response": response.content}
     except Exception as e:
-        return {"response": "Error reading PDF. Ensure it is a valid text-based PDF."}
+        logger.error(f"JD analysis error: {str(e)}", exc_info=True)
+        return {"response": "⚠️ Error reading PDF. Ensure it is a valid text-based PDF."}
 
 # ---------------------------------------------------------
 # TTS ENDPOINT (Gemini 2.5 Flash Preview)
@@ -249,8 +251,8 @@ async def text_to_speech(request: Request, tts_request: TTSRequest):
         return Response(content=wav_audio, media_type="audio/wav")
 
     except Exception as e:
-        logger.error(f"🔥 TTS CRASH: {str(e)}")
-        return Response(content=f"Error: {str(e)}", status_code=500, media_type="text/plain")
+        logger.error(f"🔥 TTS CRASH: {str(e)}", exc_info=True)
+        return Response(content="Audio generation failed. Please try again.", status_code=500, media_type="text/plain")
 
 
 if __name__ == "__main__":

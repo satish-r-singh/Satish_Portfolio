@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { API_URL } from '../constants';
 
 type SystemState = 'IDLE' | 'PROCESSING' | 'SPEAKING' | 'LISTENING';
@@ -35,6 +35,7 @@ export const useChat = ({
     const [systemState, setSystemState] = useState<SystemState>('IDLE');
 
     const consoleContainerRef = useRef<HTMLDivElement>(null);
+    const sessionId = useMemo(() => crypto.randomUUID(), []);
 
     // Auto-scroll console
     useEffect(() => {
@@ -79,11 +80,17 @@ export const useChat = ({
         try {
             if (tool === 'JD_MATCHER') addLog('> PARSING_CONTEXT_WINDOW...');
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+
             const apiResponse = await fetch(`${API_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: queryText, session_id: "guest_browser" }),
+                body: JSON.stringify({ message: queryText, session_id: sessionId }),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             if (!apiResponse.ok) throw new Error(`Server Error: ${apiResponse.status}`);
             const data = await apiResponse.json();
@@ -116,7 +123,12 @@ export const useChat = ({
         formData.append("file", file);
 
         try {
-            const res = await fetch(`${API_URL}/analyze_jd`, { method: "POST", body: formData });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+            const res = await fetch(`${API_URL}/analyze_jd`, { method: "POST", body: formData, signal: controller.signal });
+
+            clearTimeout(timeoutId);
             const data = await res.json();
 
             addLog('> ANALYSIS_COMPLETE: GENERATING_REPORT...');

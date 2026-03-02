@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Code, Cpu, Palette, Box, Globe, Database, Server, Share2, Layers, Map } from 'lucide-react';
 
 interface TechStackModalProps {
@@ -9,6 +9,15 @@ interface TechStackModalProps {
 export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose }) => {
   // State to toggle views
   const [activeTab, setActiveTab] = useState<'stack' | 'diagram'>('stack');
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -40,7 +49,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label="System architecture and tech stack">
       <div className="w-full max-w-5xl bg-white border-3 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-h-[90vh] overflow-hidden relative flex flex-col">
 
         {/* HEADER */}
@@ -56,6 +65,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
           </div>
           <button
             onClick={onClose}
+            aria-label="Close modal"
             className="p-2 border-2 border-white bg-black text-white hover:bg-white hover:text-black hover:scale-110 transition-all duration-200"
           >
             <X size={24} strokeWidth={3} />
@@ -138,7 +148,7 @@ export const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose 
 
                 {/* THE DIAGRAM IMAGE */}
                 <img
-                  src="/images/architecture_diagram.png"
+                  src="/images/architecture_diagram.webp"
                   alt="System Architecture Diagram"
                   className="w-full h-auto object-contain relative z-10"
                 />
